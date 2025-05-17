@@ -41,18 +41,20 @@ class _HumidityGraphPainter extends CustomPainter {
     final underPaint = Paint()..color = Colors.orange;
     final overPaint = Paint()..color = Colors.red;
     final targetPaint = Paint()..color = Colors.blue;
-    final recommendedPaint = Paint()..color = Colors.green;
+    final recommendedPaint = Paint()..color = Colors.lightGreen;
 
     final barY = size.height / 2;
     final scale = size.width / 100;
 
     // Base line
     canvas.drawLine(Offset(0, barY), Offset(size.width, barY), linePaint);
+    
+    // Recommended range
     {
       final lowX = 55 * scale;
       final width = 10 * scale;
       canvas.drawRect(
-        Rect.fromLTWH(lowX, barY - 5, width, 5),
+        Rect.fromLTWH(lowX, barY - 7, width, 7),
         recommendedPaint,
       );
     }
@@ -68,22 +70,25 @@ class _HumidityGraphPainter extends CustomPainter {
     }
 
     // Humidity bars
+    var top = barY - 2;
+    double thickness = 4;
     if (humidity < targetHumidity) {
+      
       canvas.drawRect(
-        Rect.fromLTWH(0, barY - 3, humidity * scale, 6),
+        Rect.fromLTWH(0, top, humidity * scale, thickness),
         underPaint,
       );
     } else {
       canvas.drawRect(
-        Rect.fromLTWH(0, barY - 3, targetHumidity * scale, 6),
+        Rect.fromLTWH(0, top, targetHumidity * scale, thickness),
         underPaint,
       );
       canvas.drawRect(
         Rect.fromLTWH(
           targetHumidity * scale,
-          barY - 3,
+          top,
           (humidity - targetHumidity) * scale,
-          6,
+          thickness,
         ),
         overPaint,
       );
@@ -92,8 +97,7 @@ class _HumidityGraphPainter extends CustomPainter {
     // Target circle
     canvas.drawCircle(Offset(targetHumidity * scale, barY), 4, targetPaint);
 
-    final textY = barY + 10;
-    
+    final textY = barY + 10;    
     _drawLabel(canvas, '0%',  Offset(0, textY));
     _drawLabel(canvas, '50%',  Offset(50*scale-8, textY));
     _drawLabel(canvas, '100%',  Offset(100*scale-22, textY));
