@@ -1,5 +1,9 @@
-import 'package:flutter/material.dart';
+  import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'label_value_widget.dart';
+import 'mode_value_widget.dart';
+import 'roof_unit_state.dart';
+import 'humiditty_graph_widget.dart';
 
 void main() {
   runApp(
@@ -10,39 +14,9 @@ void main() {
   );
 }
 
-enum Mode { off, fanOnly, humidifier }
-
-enum FanSpeed { low, auto, high }
-
-enum ExternalVent { open, closed }
-
-class RoofUnitState extends ChangeNotifier {
-  Mode _mode = Mode.humidifier;
-  FanSpeed _fanSpeed = FanSpeed.low;
-  ExternalVent _externalVent = ExternalVent.closed;
-
-  Mode get mode => _mode;
-  void setMode(Mode mode) {
-    _mode = mode;
-    notifyListeners();
-  }
-
-  FanSpeed get fanSpeed => _fanSpeed;
-  void setFanSpeed(FanSpeed speed) {
-    _fanSpeed = speed;
-    notifyListeners();
-  }
-
-  ExternalVent get externalVent => _externalVent;
-  void setExternalVent(ExternalVent vent) {
-    _externalVent = vent;
-    notifyListeners();
-  }
-}
-
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-  static SizedBox spaceBox = SizedBox(height: 5);
+  static SizedBox spaceBox = SizedBox(height: 10);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +26,7 @@ class MainApp extends StatelessWidget {
         body: Center(
           child: Container(
             width: 240,
-            height: 320,
+            height: 360,
             color: Colors.grey[200],
             padding: EdgeInsets.all(16),
             child: Column(
@@ -93,6 +67,16 @@ class MainApp extends StatelessWidget {
                     );
                   },
                 ),
+                spaceBox,
+                LabelValueWidget(
+                  label: 'Humidity',
+                  value: "${roofUnitState.humidity}%",
+                  onTap: () {
+                    roofUnitState.setHumidity(roofUnitState.humidity + 1);
+                  },
+                ),
+                spaceBox,
+                HumidityGraphWidget(humidity: roofUnitState.humidity, targetHumidity: roofUnitState.targetHumidity),
               ],
             ),
           ),
@@ -129,84 +113,5 @@ class LogoAndCompany extends StatelessWidget {
         ),
       ],
     );
-  }
-}
-
-class ModeValueWidget extends StatelessWidget {
-  const ModeValueWidget({super.key, required this.mode, required this.onTap});
-
-  final Mode mode;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Expanded(
-            child: Align(
-              alignment: Alignment.center,
-              child: Text(
-                displayMode(mode),
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String displayMode(Mode mode) {
-    switch (mode) {
-      case Mode.off:
-        return 'Unit Off';
-      case Mode.fanOnly:
-        return 'Only Fan Only';
-      case Mode.humidifier:
-        return 'Dehumidifier Idle';
-    }
-  }
-}
-
-class LabelValueWidget extends StatelessWidget {
-  const LabelValueWidget({
-    super.key,
-    required this.label,
-    required this.value,
-    required this.onTap,
-  });
-
-  final String label;
-  final String value;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Expanded(
-            child: Align(alignment: Alignment.centerRight, child: Text(label)),
-          ),
-          SizedBox(width: 20), // optional spacing
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                captalise(value),
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String captalise(String str) {
-    return str[0].toUpperCase() + str.substring(1);
   }
 }
