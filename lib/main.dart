@@ -1,18 +1,38 @@
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'label_value_widget.dart';
-import 'mode_value_widget.dart';
 import 'roof_unit_state.dart';
-import 'humiditty_graph_widget.dart';
+import 'wall_unit_widgit.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(
-      create: (context) => RoofUnitState(),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => RoofUnitState()),
+        ChangeNotifierProvider(create: (_) => UserInputState()),
+      ],
       child: const MainApp(),
     ),
   );
 }
+
+class UserInputState extends ChangeNotifier {
+  bool _externalVentPresent = false;
+  int _humidity = 50;
+
+  bool get externalVentPresent => _externalVentPresent;
+  int get humidity => _humidity;
+
+  void setExternalVentPresent(bool? value) {
+    _externalVentPresent = value ?? false;
+    notifyListeners();
+  }
+
+  void setHumidity(int value) {
+    _humidity = value;
+    notifyListeners();
+  }
+}
+
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -21,64 +41,19 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var roofUnitState = context.watch<RoofUnitState>();
+    var userInputState = context.watch<UserInputState>();
     return MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Container(
-            width: 240,
-            height: 360,
-            color: Colors.grey[200],
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                LogoAndCompany(),
-                spaceBox,
-                ModeValueWidget(
-                  mode: roofUnitState.mode,
-                  onTap: () {
-                    roofUnitState.setMode(
-                      roofUnitState.mode == Mode.off
-                          ? Mode.humidifier
-                          : Mode.off,
-                    );
-                  },
-                ),
-                spaceBox,
-                LabelValueWidget(
-                  label: 'Fan Speed',
-                  value: roofUnitState.fanSpeed.name,
-                  onTap: () {
-                    roofUnitState.setFanSpeed(
-                      roofUnitState.fanSpeed == FanSpeed.low
-                          ? FanSpeed.high
-                          : FanSpeed.low,
-                    );
-                  },
-                ),
-                spaceBox,
-                LabelValueWidget(
-                  label: 'External Vent',
-                  value: roofUnitState.externalVent.name,
-                  onTap: () {
-                    roofUnitState.setExternalVent(
-                      roofUnitState.externalVent == ExternalVent.closed
-                          ? ExternalVent.open
-                          : ExternalVent.closed,
-                    );
-                  },
-                ),
-                spaceBox,
-                LabelValueWidget(
-                  label: 'Humidity',
-                  value: "${roofUnitState.humidity}%",
-                  onTap: () {
-                    roofUnitState.setHumidity(roofUnitState.humidity + 1);
-                  },
-                ),
-                spaceBox,
-                HumidityGraphWidget(humidity: roofUnitState.humidity, targetHumidity: roofUnitState.targetHumidity),
-              ],
-            ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              WallUnitWidgit(spaceBox: spaceBox, roofUnitState: roofUnitState),
+              spaceBox,
+              RoofUnitWidget(roofUnitState: roofUnitState),
+              spaceBox,
+              UserInputWidget( userInputState: userInputState),
+            ],
           ),
         ),
       ),
@@ -86,32 +61,103 @@ class MainApp extends StatelessWidget {
   }
 }
 
-class LogoAndCompany extends StatelessWidget {
-  const LogoAndCompany({super.key});
+class RoofUnitWidget extends StatelessWidget {
+  const RoofUnitWidget({super.key, required this.roofUnitState});
+
+  final RoofUnitState roofUnitState;
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 1,
-          child: SizedBox(
-            //height: 40,
-            child: Image.asset(
-              'assets/dry_living_logo.png',
-              fit: BoxFit.contain,
+    return Container(
+      alignment: Alignment.center,
+      color: Colors.grey[200],
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.wind_power, color: Colors.blue),
+                SizedBox(width: 4),
+                Text("Fan ${roofUnitState.fanSpeed.name}"),
+              ],
             ),
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Text(
-            'Dehumidifier Ventilation System',
-            style: TextStyle(fontSize: 16),
-            textAlign: TextAlign.center,
+          SizedBox(width: 10),
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.air_outlined, color: Colors.blue),
+                SizedBox(width: 4),
+                Text("Vent ${roofUnitState.externalVent.name}"),
+              ],
+            ),
           ),
-        ),
-      ],
+          SizedBox(width: 10),
+          Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Row(
+              children: [
+                Icon(Icons.ac_unit, color: Colors.blue),
+                SizedBox(width: 4),
+                Text("Dehumidifier running"),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class UserInputWidget extends StatelessWidget {
+  const UserInputWidget({super.key, required this.userInputState});
+
+  final UserInputState userInputState;
+  @override
+  Widget build(BuildContext context) {
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Checkbox(
+                value: userInputState.externalVentPresent,
+                onChanged: userInputState.setExternalVentPresent,
+              ),
+              const Text("External Vent Present"),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text("Value: ${userInputState.humidity}"),
+          Slider(
+            value: userInputState.humidity.toDouble(),
+            min: 0,
+            max: 100,
+            divisions: 10,
+            label: userInputState.humidity.toString(),
+            onChanged:(value)=> userInputState.setHumidity( value.toInt() ),
+          ),
+        ],
+      ),
     );
   }
 }
