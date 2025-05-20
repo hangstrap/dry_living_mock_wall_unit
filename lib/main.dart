@@ -1,38 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'roof_unit_state.dart';
+import 'app_state.dart';
 import 'wall_unit_widgit.dart';
 
 void main() {
   runApp(
     MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => RoofUnitState()),
-        ChangeNotifierProvider(create: (_) => UserInputState()),
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => AppState())],
       child: const MainApp(),
     ),
   );
 }
-
-class UserInputState extends ChangeNotifier {
-  bool _externalVentPresent = false;
-  int _humidity = 50;
-
-  bool get externalVentPresent => _externalVentPresent;
-  int get humidity => _humidity;
-
-  void setExternalVentPresent(bool? value) {
-    _externalVentPresent = value ?? false;
-    notifyListeners();
-  }
-
-  void setHumidity(int value) {
-    _humidity = value;
-    notifyListeners();
-  }
-}
-
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -40,19 +18,18 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var roofUnitState = context.watch<RoofUnitState>();
-    var userInputState = context.watch<UserInputState>();
+    var roofUnitState = context.watch<AppState>();
     return MaterialApp(
       home: Scaffold(
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              WallUnitWidgit(spaceBox: spaceBox, roofUnitState: roofUnitState),
+              WallUnitWidgit(spaceBox: spaceBox, appState: roofUnitState),
               spaceBox,
-              RoofUnitWidget(roofUnitState: roofUnitState),
+              RoofUnitWidget(appState: roofUnitState),
               spaceBox,
-              UserInputWidget( userInputState: userInputState),
+              UserInputWidget(appState: roofUnitState),
             ],
           ),
         ),
@@ -62,9 +39,9 @@ class MainApp extends StatelessWidget {
 }
 
 class RoofUnitWidget extends StatelessWidget {
-  const RoofUnitWidget({super.key, required this.roofUnitState});
+  const RoofUnitWidget({super.key, required this.appState});
 
-  final RoofUnitState roofUnitState;
+  final AppState appState;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +50,7 @@ class RoofUnitWidget extends StatelessWidget {
       color: Colors.grey[200],
       padding: const EdgeInsets.all(16),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.all(8),
@@ -85,7 +62,7 @@ class RoofUnitWidget extends StatelessWidget {
               children: [
                 Icon(Icons.wind_power, color: Colors.blue),
                 SizedBox(width: 4),
-                Text("Fan ${roofUnitState.fanSpeed.name}"),
+                Text("Fan ${appState.fanRelay.name}"),
               ],
             ),
           ),
@@ -100,7 +77,7 @@ class RoofUnitWidget extends StatelessWidget {
               children: [
                 Icon(Icons.air_outlined, color: Colors.blue),
                 SizedBox(width: 4),
-                Text("Vent ${roofUnitState.externalVent.name}"),
+                Text("Vent ${appState.externalVentRelay.name}"),
               ],
             ),
           ),
@@ -115,7 +92,7 @@ class RoofUnitWidget extends StatelessWidget {
               children: [
                 Icon(Icons.ac_unit, color: Colors.blue),
                 SizedBox(width: 4),
-                Text("Dehumidifier running"),
+                Text("Dehumidifier ${appState.deHumidifierRelay.name}"),
               ],
             ),
           ),
@@ -126,12 +103,11 @@ class RoofUnitWidget extends StatelessWidget {
 }
 
 class UserInputWidget extends StatelessWidget {
-  const UserInputWidget({super.key, required this.userInputState});
+  const UserInputWidget({super.key, required this.appState});
 
-  final UserInputState userInputState;
+  final AppState appState;
   @override
   Widget build(BuildContext context) {
-
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -140,21 +116,26 @@ class UserInputWidget extends StatelessWidget {
           Row(
             children: [
               Checkbox(
-                value: userInputState.externalVentPresent,
-                onChanged: userInputState.setExternalVentPresent,
+                value: appState.externalVentPresent,
+                onChanged:
+                    (value) => {
+                      if (value != null)
+                        {appState.setExternalVentPresent(value)},
+                    },
               ),
               const Text("External Vent Present"),
             ],
           ),
-          const SizedBox(height: 16),
-          Text("Value: ${userInputState.humidity}"),
+          const SizedBox(height: 16), 
+          Text("Value: ${appState.humidity}"),
           Slider(
-            value: userInputState.humidity.toDouble(),
+            value: appState.humidity.toDouble(),
             min: 0,
             max: 100,
-            divisions: 10,
-            label: userInputState.humidity.toString(),
-            onChanged:(value)=> userInputState.setHumidity( value.toInt() ),
+            divisions: 100,
+    
+            label: appState.humidity.toString(),
+            onChanged: (value) => appState.setHumidity(value.toInt()),
           ),
         ],
       ),

@@ -142,4 +142,8 @@ class AppState extends ChangeNotifier {
     _externalVentPresent = present;
     _update();
   }
+  bool get displayFanSpeed => _mode == Mode.fanOnly || _mode == Mode.humidifier;
+  bool get displayExternalVent => externalVentPresent && mode != Mode.off;
+  bool get displayHumifity => _mode == Mode.humidifier;
+
 }
