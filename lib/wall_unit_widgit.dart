@@ -51,32 +51,38 @@ class WallUnitWidgit extends StatelessWidget {
           spaceBox,
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
-            child: Center(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerRight,
-                      child: const Text("Humidity"),
-                    ),
-                  ),
-                  SizedBox(width: 20), // optional spacing
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: NumberPicker(
-                        value: appState.targetHumidity,
-                        onChanged: appState.setTargetHumidity,
-                        min: 20,
-                        max: 80,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            child: LabelValueWidget(
+              label: 'Humidity',
+              value: '${appState.humidity}%',
+              onTap: () => {},
             ),
+
+            // child: Center(
+            //   child: Row(
+            //     children: [
+            //       Expanded(
+            //         child: Align(
+            //           alignment: Alignment.centerRight  ,
+            //           child: const Text("Humidity"),
+            //         ),
+            //       ),
+            //    //   SizedBox(width: 20), // optional spacing
+            //       Expanded(
+            //         child: Align(
+            //           alignment: Alignment.centerLeft,
+            //           child: NumberPicker(
+            //             value: appState.targetHumidity,
+            //             onChanged: appState.setTargetHumidity,
+            //             min: 20,
+            //             max: 80,
+            //           ),
+            //         ),
+            //       ),
+            //     ],
+            //   ),
+            // ),
           ),
-//          spaceBox,
+          //          spaceBox,
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
             child: HumidityGraphWidget(
