@@ -2,14 +2,23 @@ import 'package:flutter/material.dart';
 
 class HumidityGraphScaleHelper {
   final double width;
+  static const int minHumidity = 20;
+  static const int maxHumidity = 80;
 
   HumidityGraphScaleHelper(this.width);
 
-  /// Converts a humidity value (0–100) to x-coordinate
-  double toX(int humidity) => (humidity.clamp(0, 100) / 100) * width;
+  /// Converts humidity (20–80) to an x-coordinate
+  double toX(int humidity) {
+    final clamped = humidity.clamp(minHumidity, maxHumidity);
+    return ((clamped - minHumidity) / (maxHumidity - minHumidity)) * width;
+  }
 
-  /// Converts an x-coordinate to a humidity value (0–100)
-  int fromX(double x) => ((x / width) * 100).clamp(0, 100).round();
+  /// Converts an x-coordinate to a humidity value (20–80)
+  int fromX(double x) {
+    final ratio = (x / width).clamp(0.0, 1.0);
+    final humidity = minHumidity + ratio * (maxHumidity - minHumidity);
+    return humidity.round();
+  }
 }
 
 class HumidityGraphWidget extends StatelessWidget {
@@ -77,6 +86,9 @@ class _HumidityGraphPainter extends CustomPainter {
     // Base line
     canvas.drawLine(Offset(0, barY), Offset(size.width, barY), linePaint);
 
+final min = HumidityGraphScaleHelper.minHumidity;
+final max = HumidityGraphScaleHelper.maxHumidity;
+
     // Recommended range: 55–65%
     final lowX = scaleHelper.toX(55);
     final highX = scaleHelper.toX(65);
@@ -86,13 +98,13 @@ class _HumidityGraphPainter extends CustomPainter {
     );
 
     // Ticks every 10%
-    for (int i = 0; i <= 100; i += 10) {
+    for (int i = 20; i <= 80; i += 10) {
       final x = scaleHelper.toX(i);
       canvas.drawLine(Offset(x, barY - 5), Offset(x, barY + 5), tickPaint);
     }
 
-    // Long ticks at 0, 50, 100
-    for (int i in [0, 50, 100]) {
+    // Long ticks at 20, 50, 80
+    for (int i in [20, 50, 80]) {
       final x = scaleHelper.toX(i);
       canvas.drawLine(Offset(x, barY - 10), Offset(x, barY + 10), tickPaint);
     }
@@ -115,9 +127,9 @@ class _HumidityGraphPainter extends CustomPainter {
 
     // Labels
     final textY = barY + 10;
-    _drawLabel(canvas, '0%', Offset(0, textY));
+    _drawLabel(canvas, '20%', Offset(scaleHelper.toX(20), textY));
     _drawLabel(canvas, '50%', Offset(scaleHelper.toX(50) - 8, textY));
-    _drawLabel(canvas, '100%', Offset(scaleHelper.toX(100) - 22, textY));
+    _drawLabel(canvas, '80%', Offset(scaleHelper.toX(100) - 18, textY));
   }
 
   void _drawLabel(Canvas canvas, String text, Offset offset) {
