@@ -146,4 +146,20 @@ class AppState extends ChangeNotifier {
   bool get displayExternalVent => externalVentPresent && mode != Mode.off;
   bool get displayHumifity => _mode == Mode.humidifier;
 
+  String get modalDisplay {
+    switch (_mode) {
+      case Mode.off:
+        return "Unit Off";
+      case Mode.fanOnly:
+        return "Fan Only";
+      case Mode.humidifier:
+        if( humidity > targetHumidity){
+          return "Dehumidifier Running";
+        }
+        else{
+          return "Dehumidifier Idle";
+        }
+    }
+  }
+
 }

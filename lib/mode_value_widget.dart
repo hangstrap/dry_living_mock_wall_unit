@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 
 class ModeValueWidget extends StatelessWidget {
-  const ModeValueWidget({super.key, required this.mode, required this.onTap});
+  const ModeValueWidget({super.key, required this.appState, required this.onTap});
 
-  final Mode mode;
+  final AppState appState;
   final VoidCallback onTap;
 
   @override
@@ -17,7 +17,7 @@ class ModeValueWidget extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                displayMode(mode),
+                appState.modalDisplay,
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
@@ -25,17 +25,6 @@ class ModeValueWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  String displayMode(Mode mode) {
-    switch (mode) {
-      case Mode.off:
-        return 'Unit Off';
-      case Mode.fanOnly:
-        return 'Only Fan Only';
-      case Mode.humidifier:
-        return 'Dehumidifier Idle';
-    }
   }
 }
 

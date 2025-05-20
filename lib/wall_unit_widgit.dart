@@ -27,7 +27,7 @@ class WallUnitWidgit extends StatelessWidget {
           LogoAndCompany(),
           spaceBox,
           ModeValueWidget(
-            mode: appState.mode,
+            appState: appState,
             onTap: () => appState.toggleMode(),
           ),
           spaceBox,
@@ -67,7 +67,7 @@ class WallUnitWidgit extends StatelessWidget {
                       child: NumberPicker(
                         value: appState.targetHumidity,
                         onChanged: appState.setTargetHumidity,
-                        min: 30,
+                        min: 20,
                         max: 80,
                       ),
                     ),

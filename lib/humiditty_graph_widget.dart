@@ -86,8 +86,6 @@ class _HumidityGraphPainter extends CustomPainter {
     // Base line
     canvas.drawLine(Offset(0, barY), Offset(size.width, barY), linePaint);
 
-final min = HumidityGraphScaleHelper.minHumidity;
-final max = HumidityGraphScaleHelper.maxHumidity;
 
     // Recommended range: 55–65%
     final lowX = scaleHelper.toX(55);
