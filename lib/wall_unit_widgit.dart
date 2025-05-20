@@ -56,31 +56,6 @@ class WallUnitWidgit extends StatelessWidget {
               value: '${appState.humidity}%',
               onTap: () => {},
             ),
-
-            // child: Center(
-            //   child: Row(
-            //     children: [
-            //       Expanded(
-            //         child: Align(
-            //           alignment: Alignment.centerRight  ,
-            //           child: const Text("Humidity"),
-            //         ),
-            //       ),
-            //    //   SizedBox(width: 20), // optional spacing
-            //       Expanded(
-            //         child: Align(
-            //           alignment: Alignment.centerLeft,
-            //           child: NumberPicker(
-            //             value: appState.targetHumidity,
-            //             onChanged: appState.setTargetHumidity,
-            //             min: 20,
-            //             max: 80,
-            //           ),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ),
           //          spaceBox,
           Opacity(
