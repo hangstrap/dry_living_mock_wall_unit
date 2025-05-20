@@ -1,22 +1,48 @@
 import 'package:flutter/material.dart';
 
+class HumidityGraphScaleHelper {
+  final double width;
+
+  HumidityGraphScaleHelper(this.width);
+
+  /// Converts a humidity value (0–100) to x-coordinate
+  double toX(int humidity) => (humidity.clamp(0, 100) / 100) * width;
+
+  /// Converts an x-coordinate to a humidity value (0–100)
+  int fromX(double x) => ((x / width) * 100).clamp(0, 100).round();
+}
+
 class HumidityGraphWidget extends StatelessWidget {
   final int humidity;
   final int targetHumidity;
+  final void Function(int)? onHumidityTap;
 
   const HumidityGraphWidget({
     super.key,
     required this.humidity,
     required this.targetHumidity,
+    this.onHumidityTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: 10, // Important: set height here
-      child: CustomPaint(
-        painter: _HumidityGraphPainter(humidity, targetHumidity),
+    return GestureDetector(
+      onTapDown: (TapDownDetails details) {
+        final localX = details.localPosition.dx;
+        final renderBox = context.findRenderObject() as RenderBox?;
+        if (renderBox != null) {
+          final width = renderBox.size.width;
+          final scaleHelper = HumidityGraphScaleHelper(width);
+          final clickedHumidity = scaleHelper.fromX(localX);
+          onHumidityTap?.call(clickedHumidity);
+        }
+      },
+      child: SizedBox(
+        width: double.infinity,
+        height: 25,
+        child: CustomPaint(
+          painter: _HumidityGraphPainter(humidity, targetHumidity),
+        ),
       ),
     );
   }
@@ -30,88 +56,77 @@ class _HumidityGraphPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
+    final scaleHelper = HumidityGraphScaleHelper(size.width);
+    final barY = size.height / 2;
+
     final tickPaint =
         Paint()
           ..color = Colors.black
           ..strokeWidth = 1;
+
     final linePaint =
         Paint()
           ..color = Colors.black
           ..strokeWidth = 2;
+
     final underPaint = Paint()..color = Colors.orange;
     final overPaint = Paint()..color = Colors.red;
     final targetPaint = Paint()..color = Colors.blue;
     final recommendedPaint = Paint()..color = Colors.lightGreen;
 
-    final barY = size.height / 2;
-    final scale = size.width / 100;
-
     // Base line
     canvas.drawLine(Offset(0, barY), Offset(size.width, barY), linePaint);
-    
-    // Recommended range
-    {
-      final lowX = 55 * scale;
-      final width = 10 * scale;
-      canvas.drawRect(
-        Rect.fromLTWH(lowX, barY - 7, width, 7),
-        recommendedPaint,
-      );
-    }
+
+    // Recommended range: 55–65%
+    final lowX = scaleHelper.toX(55);
+    final highX = scaleHelper.toX(65);
+    canvas.drawRect(
+      Rect.fromLTWH(lowX, barY - 7, highX - lowX, 7),
+      recommendedPaint,
+    );
+
     // Ticks every 10%
     for (int i = 0; i <= 100; i += 10) {
-      final x = i * scale;
+      final x = scaleHelper.toX(i);
       canvas.drawLine(Offset(x, barY - 5), Offset(x, barY + 5), tickPaint);
     }
-    // Long ticks at 0%, 50%, 100%
+
+    // Long ticks at 0, 50, 100
     for (int i in [0, 50, 100]) {
-      final x = i * scale;
+      final x = scaleHelper.toX(i);
       canvas.drawLine(Offset(x, barY - 10), Offset(x, barY + 10), tickPaint);
     }
 
     // Humidity bars
-    var top = barY - 2;
-    double thickness = 4;
+    final top = barY - 2;
+    const thickness = 4.0;
+    final hX = scaleHelper.toX(humidity);
+    final tX = scaleHelper.toX(targetHumidity);
+
     if (humidity < targetHumidity) {
-      
-      canvas.drawRect(
-        Rect.fromLTWH(0, top, humidity * scale, thickness),
-        underPaint,
-      );
+      canvas.drawRect(Rect.fromLTWH(0, top, hX, thickness), underPaint);
     } else {
-      canvas.drawRect(
-        Rect.fromLTWH(0, top, targetHumidity * scale, thickness),
-        underPaint,
-      );
-      canvas.drawRect(
-        Rect.fromLTWH(
-          targetHumidity * scale,
-          top,
-          (humidity - targetHumidity) * scale,
-          thickness,
-        ),
-        overPaint,
-      );
+      canvas.drawRect(Rect.fromLTWH(0, top, tX, thickness), underPaint);
+      canvas.drawRect(Rect.fromLTWH(tX, top, hX - tX, thickness), overPaint);
     }
 
     // Target circle
-    canvas.drawCircle(Offset(targetHumidity * scale, barY), 4, targetPaint);
+    canvas.drawCircle(Offset(tX, barY), 4, targetPaint);
 
-    final textY = barY + 10;    
-    _drawLabel(canvas, '0%',  Offset(0, textY));
-    _drawLabel(canvas, '50%',  Offset(50*scale-8, textY));
-    _drawLabel(canvas, '100%',  Offset(100*scale-22, textY));
+    // Labels
+    final textY = barY + 10;
+    _drawLabel(canvas, '0%', Offset(0, textY));
+    _drawLabel(canvas, '50%', Offset(scaleHelper.toX(50) - 8, textY));
+    _drawLabel(canvas, '100%', Offset(scaleHelper.toX(100) - 22, textY));
   }
 
-  void _drawLabel(
-    Canvas canvas,
-    String text,
-    Offset offset,
-  ) {
-    final textPainter = TextPainter(textDirection: TextDirection.ltr);
-    textPainter.text = TextSpan(
-      text: text,
-      style:  TextStyle(color: Colors.grey[800], fontSize: 10),
+  void _drawLabel(Canvas canvas, String text, Offset offset) {
+    final textPainter = TextPainter(
+      text: TextSpan(
+        text: text,
+        style: TextStyle(color: Colors.grey[800], fontSize: 10),
+      ),
+      textDirection: TextDirection.ltr,
     );
     textPainter.layout();
     textPainter.paint(canvas, offset);

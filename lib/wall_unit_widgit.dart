@@ -41,8 +41,7 @@ class WallUnitWidgit extends StatelessWidget {
           ),
           spaceBox,
           Opacity(
-            opacity:
-                appState.displayExternalVent ? 1.0 : 0.0,
+            opacity: appState.displayExternalVent ? 1.0 : 0.0,
             child: LabelValueWidget(
               label: 'External Vent',
               value: appState.externalVent.name,
@@ -77,12 +76,13 @@ class WallUnitWidgit extends StatelessWidget {
               ),
             ),
           ),
-          spaceBox,
+//          spaceBox,
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
             child: HumidityGraphWidget(
               humidity: appState.humidity,
               targetHumidity: appState.targetHumidity,
+              onHumidityTap: (value) => appState.setTargetHumidity(value),
             ),
           ),
         ],
