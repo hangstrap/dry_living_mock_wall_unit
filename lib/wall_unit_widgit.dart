@@ -15,25 +15,25 @@ class WallUnitWidgit extends StatelessWidget {
   final SizedBox spaceBox;
   final AppState appState;
 
-@override
-Widget build(BuildContext context) {
-  return Container(
-    width: 240,
-    height: 360,
-    color: Colors.grey[200],
-    padding: EdgeInsets.all(16),
-    child: Column(
-      children: [
-        Expanded(
-          child: Column(
-            children: [
-              LogoAndCompany(),
-              spaceBox,
-              ModeValueWidget(
-                appState: appState,
-                onTap: () => appState.toggleMode(),
-              ),
-              spaceBox,
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 240,
+      height: 360,
+      color: Colors.grey[200],
+      padding: EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Expanded(
+            child: Column(
+              children: [
+                LogoAndCompany(),
+                spaceBox,
+                ModeValueWidget(
+                  appState: appState,
+                  onTap: () => appState.toggleMode(),
+                ),
+                spaceBox,
                 Opacity(
                   opacity: appState.displayHumifity ? 1.0 : 0.0,
                   child: LabelValueWidget(
@@ -47,32 +47,32 @@ Widget build(BuildContext context) {
                   child: HumidityGraphWidget(
                     humidity: appState.humidity,
                     targetHumidity: appState.targetHumidity,
-                    onHumidityTap: (v)=> {},//(value) => appState.setTargetHumidity(value),
+                    onHumidityTap:
+                        (v) =>
+                            {}, //(value) => appState.setTargetHumidity(value),
                   ),
                 ),
+              ],
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              TextButton.icon(
+                icon: Icon(Icons.settings),
+                label: Text('Setup'),
+                onPressed: () => appState.setDisplay(Display.settings),
+              ),
+              SizedBox(width: 16),
+              TextButton.icon(
+                icon: Icon(Icons.info),
+                label: Text('Info'),
+                onPressed: () => appState.setDisplay(Display.info),
+              ),
             ],
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            TextButton.icon(
-              icon: Icon(Icons.settings),
-              label: Text('Setup'),
-              onPressed: () => debugPrint('Setup pressed'),
-            ),
-            SizedBox(width: 16),
-            TextButton.icon(
-              icon: Icon(Icons.info),
-              label: Text('Info'),
-              onPressed: () => debugPrint('Info pressed'),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
+        ],
+      ),
+    );
+  }
 }
-
-}
-

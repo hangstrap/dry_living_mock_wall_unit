@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+enum Display {home, settings, info}
+enum Editing {none, mode, fanSpeed, externalVent, targetHumidity}
+
 enum Mode { off, fanOnly, humidifier }
 
 enum FanSpeed { low, auto, high }
@@ -13,6 +16,10 @@ enum ExternalVenRelay { off, open, closed }
 enum DeHumidifierRelay { off, on }
 
 class AppState extends ChangeNotifier {
+
+  Display _display = Display.home;
+  Editing _editing = Editing.none;
+
   Mode _mode = Mode.humidifier;
   FanSpeed _fanSpeed = FanSpeed.low;
   ExternalVent _externalVent = ExternalVent.closed;
@@ -24,6 +31,8 @@ class AppState extends ChangeNotifier {
   DeHumidifierRelay _deHumidifierRelay = DeHumidifierRelay.off;
 
   bool _externalVentPresent = false;
+
+
 
   void _update() {
     switch (mode) {
@@ -66,6 +75,17 @@ class AppState extends ChangeNotifier {
         }
     }
     notifyListeners();
+  }
+
+  Display get display => _display;
+  void setDisplay(Display display) {
+    _display = display;
+    _update();
+  }
+  Editing get editing => _editing;  
+  void setEditing(Editing editing) {
+    _editing = editing;
+    _update();
   }
 
   Mode get mode => _mode;

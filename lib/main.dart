@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'wall_unit_widgit.dart';
-
+import 'setup_widget.dart';
+import 'info_widget.dart';
+    
 void main() {
   runApp(
     MultiProvider(
@@ -18,18 +20,31 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var roofUnitState = context.watch<AppState>();
+    var appState = context.watch<AppState>();
     return MaterialApp(
       home: Scaffold(
         body: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              WallUnitWidgit(spaceBox: spaceBox, appState: roofUnitState),
+              switch (appState.display) {
+                Display.home => WallUnitWidgit(
+                  spaceBox: spaceBox,
+                  appState: appState,
+                ),
+                Display.settings => SetupScreen(
+                  spaceBox: spaceBox,
+                  appState: appState,
+                ),
+                Display.info => InfoScreen(
+                  spaceBox: spaceBox,
+                  appState: appState,
+                ),
+              },
               spaceBox,
-              RoofUnitWidget(appState: roofUnitState),
+              RoofUnitWidget(appState: appState),
               spaceBox,
-              UserInputWidget(appState: roofUnitState),
+              UserInputWidget(appState: appState),
             ],
           ),
         ),
@@ -126,14 +141,14 @@ class UserInputWidget extends StatelessWidget {
               const Text("External Vent Present"),
             ],
           ),
-          const SizedBox(height: 16), 
+          const SizedBox(height: 16),
           Text("Value: ${appState.humidity}"),
           Slider(
             value: appState.humidity.toDouble(),
             min: 0,
             max: 100,
             divisions: 100,
-    
+
             label: appState.humidity.toString(),
             onChanged: (value) => appState.setHumidity(value.toInt()),
           ),
