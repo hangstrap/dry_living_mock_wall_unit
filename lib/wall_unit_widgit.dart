@@ -72,35 +72,3 @@ class WallUnitWidgit extends StatelessWidget {
   }
 }
 
-class NumberPicker extends StatelessWidget {
-  final int value;
-  final int min;
-  final int max;
-  final void Function(int) onChanged;
-
-  const NumberPicker({
-    super.key,
-    required this.value,
-    required this.onChanged,
-    this.min = 0,
-    this.max = 100,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.remove),
-          onPressed: value > min ? () => onChanged(value - 1) : null,
-        ),
-        Text('$value', style: const TextStyle(fontSize: 10)),
-        IconButton(
-          icon: const Icon(Icons.add),
-          onPressed: value < max ? () => onChanged(value + 1) : null,
-        ),
-      ],
-    );
-  }
-}
