@@ -15,60 +15,64 @@ class WallUnitWidgit extends StatelessWidget {
   final SizedBox spaceBox;
   final AppState appState;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 240,
-      height: 360,
-      color: Colors.grey[200],
-      padding: EdgeInsets.all(16),
-      child: Column(
-        children: [
-          LogoAndCompany(),
-          spaceBox,
-          ModeValueWidget(
-            appState: appState,
-            onTap: () => appState.toggleMode(),
+@override
+Widget build(BuildContext context) {
+  return Container(
+    width: 240,
+    height: 360,
+    color: Colors.grey[200],
+    padding: EdgeInsets.all(16),
+    child: Column(
+      children: [
+        Expanded(
+          child: Column(
+            children: [
+              LogoAndCompany(),
+              spaceBox,
+              ModeValueWidget(
+                appState: appState,
+                onTap: () => appState.toggleMode(),
+              ),
+              spaceBox,
+                Opacity(
+                  opacity: appState.displayHumifity ? 1.0 : 0.0,
+                  child: LabelValueWidget(
+                    label: 'Humidity',
+                    value: '${appState.humidity}%',
+                    onTap: () => {},
+                  ),
+                ),
+                Opacity(
+                  opacity: appState.displayHumifity ? 1.0 : 0.0,
+                  child: HumidityGraphWidget(
+                    humidity: appState.humidity,
+                    targetHumidity: appState.targetHumidity,
+                    onHumidityTap: (v)=> {},//(value) => appState.setTargetHumidity(value),
+                  ),
+                ),
+            ],
           ),
-          spaceBox,
-          Opacity(
-            opacity: appState.displayFanSpeed ? 1.0 : 0.0,
-            child: LabelValueWidget(
-              label: 'Fan Speed',
-              value: appState.fanSpeed.name,
-              onTap: () => appState.toggleFanSpeed(),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton.icon(
+              icon: Icon(Icons.settings),
+              label: Text('Setup'),
+              onPressed: () => debugPrint('Setup pressed'),
             ),
-          ),
-          spaceBox,
-          Opacity(
-            opacity: appState.displayExternalVent ? 1.0 : 0.0,
-            child: LabelValueWidget(
-              label: 'External Vent',
-              value: appState.externalVent.name,
-              onTap: () => appState.toggleExternalVent(),
+            SizedBox(width: 16),
+            TextButton.icon(
+              icon: Icon(Icons.info),
+              label: Text('Info'),
+              onPressed: () => debugPrint('Info pressed'),
             ),
-          ),
-          spaceBox,
-          Opacity(
-            opacity: appState.displayHumifity ? 1.0 : 0.0,
-            child: LabelValueWidget(
-              label: 'Humidity',
-              value: '${appState.humidity}%',
-              onTap: () => {},
-            ),
-          ),
-          //          spaceBox,
-          Opacity(
-            opacity: appState.displayHumifity ? 1.0 : 0.0,
-            child: HumidityGraphWidget(
-              humidity: appState.humidity,
-              targetHumidity: appState.targetHumidity,
-              onHumidityTap: (value) => appState.setTargetHumidity(value),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 }
 
