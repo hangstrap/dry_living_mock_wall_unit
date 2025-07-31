@@ -23,8 +23,6 @@ class AppState extends ChangeNotifier {
   ExternalVenRelay _externalVentRelay = ExternalVenRelay.off;
   DeHumidifierRelay _deHumidifierRelay = DeHumidifierRelay.off;
 
-  bool _externalVentPresent = false;
-
   void _update() {
     switch (mode) {
       case Mode.off:
@@ -137,13 +135,8 @@ class AppState extends ChangeNotifier {
   ExternalVenRelay get externalVentRelay => _externalVentRelay;
   DeHumidifierRelay get deHumidifierRelay => _deHumidifierRelay;
 
-  bool get externalVentPresent => _externalVentPresent;
-  void setExternalVentPresent(bool present) {
-    _externalVentPresent = present;
-    _update();
-  }
   bool get displayFanSpeed => _mode == Mode.fanOnly || _mode == Mode.humidifier;
-  bool get displayExternalVent => externalVentPresent && mode != Mode.off;
+  bool get displayExternalVent => mode != Mode.off;
   bool get displayHumifity => _mode == Mode.humidifier;
 
   String get modalDisplay {

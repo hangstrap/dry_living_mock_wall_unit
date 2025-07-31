@@ -4,8 +4,9 @@ import 'label_value_widget.dart';
 import 'mode_value_widget.dart';
 import 'humiditty_graph_widget.dart';
 import 'logo_and_company_widget.dart';
+import 'enum_radio_selector.dart';
 
-class WallUnitWidgit extends StatelessWidget {
+class WallUnitWidgit extends StatefulWidget {
   const WallUnitWidgit({
     super.key,
     required this.spaceBox,
@@ -16,48 +17,123 @@ class WallUnitWidgit extends StatelessWidget {
   final AppState appState;
 
   @override
+  State<WallUnitWidgit> createState() => _WallUnitWidgitState();
+}
+
+enum EditingField { fanSpeed, externalVent }
+
+class _WallUnitWidgitState extends State<WallUnitWidgit> {
+  EditingField? editing;
+  FanSpeed? tempFanSpeed;
+  ExternalVent? tempExternalVent;
+
+  @override
   Widget build(BuildContext context) {
+    final appState = widget.appState;
+
+    if (editing != null) {
+      return Container(
+        width: 240,
+        height: 360,
+        color: Colors.grey[200],
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            const LogoAndCompany(),
+            widget.spaceBox,
+            if (editing == EditingField.fanSpeed)
+              EnumRadioSelector<FanSpeed>(
+                title: 'Select Fan Speed',
+                options: FanSpeed.values,
+                initialValue: tempFanSpeed ?? FanSpeed.low,
+                displayStringForOption: (val) => val.toString(),
+                onResult: (val) => setState(() => tempFanSpeed = val),
+              ),
+            if (editing == EditingField.externalVent)
+              ...ExternalVent.values.map(
+                (vent) => RadioListTile<ExternalVent>(
+                  title: Text(vent.name),
+                  value: vent,
+                  groupValue: tempExternalVent,
+                  onChanged: (val) => setState(() => tempExternalVent = val),
+                ),
+              ),
+            const Spacer(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                  onPressed: () => setState(() => editing = null),
+                  child: const Text('Cancel'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    if (editing == EditingField.fanSpeed &&
+                        tempFanSpeed != null) {
+                      appState.setFanSpeed(tempFanSpeed!);
+                    } else if (editing == EditingField.externalVent &&
+                        tempExternalVent != null) {
+                      appState.setExternalVent(tempExternalVent!);
+                    }
+                    setState(() => editing = null);
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }
+
     return Container(
       width: 240,
       height: 360,
       color: Colors.grey[200],
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
-          LogoAndCompany(),
-          spaceBox,
+          const LogoAndCompany(),
+          widget.spaceBox,
           ModeValueWidget(
             appState: appState,
             onTap: () => appState.toggleMode(),
           ),
-          spaceBox,
+          widget.spaceBox,
           Opacity(
             opacity: appState.displayFanSpeed ? 1.0 : 0.0,
             child: LabelValueWidget(
               label: 'Fan Speed',
               value: appState.fanSpeed.name,
-              onTap: () => appState.toggleFanSpeed(),
+              onTap:
+                  () => setState(() {
+                    editing = EditingField.fanSpeed;
+                    tempFanSpeed = appState.fanSpeed;
+                  }),
             ),
           ),
-          spaceBox,
+          widget.spaceBox,
           Opacity(
             opacity: appState.displayExternalVent ? 1.0 : 0.0,
             child: LabelValueWidget(
               label: 'External Vent',
               value: appState.externalVent.name,
-              onTap: () => appState.toggleExternalVent(),
+              onTap:
+                  () => setState(() {
+                    editing = EditingField.externalVent;
+                    tempExternalVent = appState.externalVent;
+                  }),
             ),
           ),
-          spaceBox,
+          widget.spaceBox,
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
             child: LabelValueWidget(
               label: 'Humidity',
               value: '${appState.humidity}%',
-              onTap: () => {},
+              onTap: () {},
             ),
           ),
-          //          spaceBox,
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
             child: HumidityGraphWidget(
@@ -71,4 +147,3 @@ class WallUnitWidgit extends StatelessWidget {
     );
   }
 }
-
