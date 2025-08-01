@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'label_value_widget.dart';
 
 class HumidityGraphScaleHelper {
   final double width;
@@ -35,27 +36,38 @@ class HumidityGraphWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (TapDownDetails details) {
-        final localX = details.localPosition.dx;
-        final renderBox = context.findRenderObject() as RenderBox?;
-        if (renderBox != null) {
-          final width = renderBox.size.width;
-          final scaleHelper = HumidityGraphScaleHelper(width);
-          final clickedHumidity = scaleHelper.fromX(localX);
-          onHumidityTap?.call(clickedHumidity);
-        }
-      },
-      child: SizedBox(
-        width: double.infinity,
-        height: 25,
-        child: CustomPaint(
-          painter: _HumidityGraphPainter(humidity, targetHumidity),
+    return Column(
+      children: [
+        LabelValueWidget(
+            label: 'Humidity',
+            value: '$humidity%',
+            onTap: () {},
+          ),
+        const SizedBox(height: 4),
+        SizedBox(
+          width: double.infinity,
+          height: 25,
+          child: GestureDetector(
+            onTapDown: (TapDownDetails details) {
+              final localX = details.localPosition.dx;
+              final renderBox = context.findRenderObject() as RenderBox?;
+              if (renderBox != null) {
+                final width = renderBox.size.width;
+                final scaleHelper = HumidityGraphScaleHelper(width);
+                final clickedHumidity = scaleHelper.fromX(localX);
+                onHumidityTap?.call(clickedHumidity);
+              }
+            },
+            child: CustomPaint(
+              painter: _HumidityGraphPainter(humidity, targetHumidity),
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 }
+
 
 class _HumidityGraphPainter extends CustomPainter {
   final int humidity;

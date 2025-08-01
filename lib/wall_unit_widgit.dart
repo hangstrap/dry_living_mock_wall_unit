@@ -128,14 +128,7 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
             ),
           ),
           widget.spaceBox,
-          Opacity(
-            opacity: appState.displayHumifity ? 1.0 : 0.0,
-            child: LabelValueWidget(
-              label: 'Humidity',
-              value: '${appState.humidity}%',
-              onTap: () {},
-            ),
-          ),
+
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
             child: HumidityGraphWidget(
