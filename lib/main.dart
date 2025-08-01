@@ -53,7 +53,7 @@ class UserInputWidget extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const SizedBox(height: 16), 
-          Text("Value: ${appState.humidity}"),
+          Text("House humidity is : ${appState.humidity}"),
           Slider(
             value: appState.humidity.toDouble(),
             min: 0,

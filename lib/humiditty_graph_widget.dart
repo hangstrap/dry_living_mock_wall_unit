@@ -26,12 +26,14 @@ class HumidityGraphWidget extends StatelessWidget {
   final int humidity;
   final int targetHumidity;
   final void Function(int)? onHumidityTap;
+  final VoidCallback onEditRequested;
 
   const HumidityGraphWidget({
     super.key,
     required this.humidity,
     required this.targetHumidity,
     this.onHumidityTap,
+    required this.onEditRequested,
   });
 
   @override
@@ -41,7 +43,7 @@ class HumidityGraphWidget extends StatelessWidget {
         LabelValueWidget(
             label: 'Humidity',
             value: '$humidity%',
-            onTap: () {},
+            onTap: onEditRequested,
           ),
         const SizedBox(height: 4),
         SizedBox(
@@ -56,6 +58,7 @@ class HumidityGraphWidget extends StatelessWidget {
                 final scaleHelper = HumidityGraphScaleHelper(width);
                 final clickedHumidity = scaleHelper.fromX(localX);
                 onHumidityTap?.call(clickedHumidity);
+                 onEditRequested?.call(); 
               }
             },
             child: CustomPaint(

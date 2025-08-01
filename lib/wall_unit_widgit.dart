@@ -5,6 +5,7 @@ import 'mode_value_widget.dart';
 import 'humiditty_graph_widget.dart';
 import 'logo_and_company_widget.dart';
 import 'enum_radio_selector.dart';
+import 'humidity_edit_widget.dart';
 
 class WallUnitWidgit extends StatefulWidget {
   const WallUnitWidgit({
@@ -20,7 +21,7 @@ class WallUnitWidgit extends StatefulWidget {
   State<WallUnitWidgit> createState() => _WallUnitWidgitState();
 }
 
-enum EditingField { fanSpeed, externalVent, mode }
+enum EditingField { fanSpeed, externalVent, mode, targetHumidity }
 
 class _WallUnitWidgitState extends State<WallUnitWidgit> {
   EditingField? editing;
@@ -47,7 +48,13 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
                 title: 'Select Fan Speed',
                 options: FanSpeed.values,
                 initialValue: appState.fanSpeed,
-                displayStringForOption: (fs) => fs.name,
+                displayStringForOption: (fs){
+                  switch(fs){
+                    case FanSpeed.low: return "Low";
+                    case FanSpeed.auto: return "Auto";
+                    case FanSpeed.high: return "High";
+                  }
+                },
                 onResult: (selected) {
                   setState(() {
                     appState.setFanSpeed(selected);
@@ -60,7 +67,12 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
                 title: 'Select External Vent',
                 options: ExternalVent.values,
                 initialValue: widget.appState.externalVent,
-                displayStringForOption: (ev) => ev.name,
+                displayStringForOption: (ev) {
+                  switch( ev){
+                    case ExternalVent.open: return "Open";
+                    case ExternalVent.closed: return "Closed";
+                  }
+                },
                 onResult: (selected) {
                   setState(() {
                     widget.appState.setExternalVent(selected);
@@ -74,12 +86,27 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
                 title: 'Select Mode',
                 options: Mode.values,
                 initialValue: appState.mode,
-                displayStringForOption: (m) => m.name,
+                displayStringForOption: (m){
+                    switch(m){
+                      case Mode.off: return "Off";
+                      case Mode.fanOnly: return "Fan Only";
+                      case Mode.humidifier: return "Dehumidifier";
+                    }
+                  },
                 onResult: (selected) {
                   setState(() {
                     appState.setMode(selected);
                     editing = null;
                   });
+                },
+              ),
+            if (editing == EditingField.targetHumidity)
+              HumidityEditWidget(
+                initialTargetHumidity: appState.targetHumidity,
+                onCancel: () => setState(() => editing = null),
+                onChanged: (newHumidity) {
+                  appState.setTargetHumidity(newHumidity);
+                  setState(() => editing = null);
                 },
               ),
           ],
@@ -131,10 +158,19 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
 
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
-            child: HumidityGraphWidget(
-              humidity: appState.humidity,
-              targetHumidity: appState.targetHumidity,
-              onHumidityTap: (value) => appState.setTargetHumidity(value),
+            child: GestureDetector(
+              onTap:
+                  () => setState(() => editing = EditingField.targetHumidity),
+              child: HumidityGraphWidget(
+                humidity: appState.humidity,
+                targetHumidity: appState.targetHumidity,
+                onHumidityTap: (_) {}, // no-op when not editing
+                onEditRequested: () {
+                  setState(() {
+                    editing = EditingField.targetHumidity;
+                  });
+                },
+              ),
             ),
           ),
         ],

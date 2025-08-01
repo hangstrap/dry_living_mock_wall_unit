@@ -24,7 +24,7 @@ class RoofUnitWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.wind_power, color: Colors.blue),
+                Icon(Icons.wind_power, color: appState.fanRelay ==FanRelay.off? Colors.blue: Colors.green),
                 SizedBox(width: 4),
                 Text("Fan ${appState.fanRelay.name}"),
               ],
@@ -39,7 +39,7 @@ class RoofUnitWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.air_outlined, color: Colors.blue),
+                Icon(Icons.air_outlined, color: appState.externalVentRelay == ExternalVenRelay.closed?  Colors.blue: Colors.green),
                 SizedBox(width: 4),
                 Text("Vent ${appState.externalVentRelay.name}"),
               ],
@@ -54,7 +54,7 @@ class RoofUnitWidget extends StatelessWidget {
             ),
             child: Row(
               children: [
-                Icon(Icons.ac_unit, color: Colors.blue),
+                Icon(Icons.ac_unit, color: appState.deHumidifierRelay==DeHumidifierRelay.off? Colors.blue: Colors.green),
                 SizedBox(width: 4),
                 Text("Dehumidifier ${appState.deHumidifierRelay.name}"),
               ],
