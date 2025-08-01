@@ -26,6 +26,7 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
   EditingField? editing;
   FanSpeed? tempFanSpeed;
   ExternalVent? tempExternalVent;
+  bool showFanSelector = false;
 
   @override
   Widget build(BuildContext context) {
@@ -45,42 +46,28 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
               EnumRadioSelector<FanSpeed>(
                 title: 'Select Fan Speed',
                 options: FanSpeed.values,
-                initialValue: tempFanSpeed ?? FanSpeed.low,
-                displayStringForOption: (val) => val.toString(),
-                onResult: (val) => setState(() => tempFanSpeed = val),
+                initialValue: appState.fanSpeed,
+                displayStringForOption: (fs) => fs.name,
+                onResult: (selected) {
+                  setState(() {
+                    appState.setFanSpeed(selected);
+                    editing = null;
+                  });
+                },
               ),
             if (editing == EditingField.externalVent)
-              ...ExternalVent.values.map(
-                (vent) => RadioListTile<ExternalVent>(
-                  title: Text(vent.name),
-                  value: vent,
-                  groupValue: tempExternalVent,
-                  onChanged: (val) => setState(() => tempExternalVent = val),
-                ),
+              EnumRadioSelector<ExternalVent>(
+                title: 'Select External Vent',
+                options: ExternalVent.values,
+                initialValue: widget.appState.externalVent,
+                displayStringForOption: (ev) => ev.name,
+                onResult: (selected) {
+                  setState(() {
+                    widget.appState.setExternalVent(selected);
+                    editing = null;
+                  });
+                },
               ),
-            const Spacer(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                TextButton(
-                  onPressed: () => setState(() => editing = null),
-                  child: const Text('Cancel'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    if (editing == EditingField.fanSpeed &&
-                        tempFanSpeed != null) {
-                      appState.setFanSpeed(tempFanSpeed!);
-                    } else if (editing == EditingField.externalVent &&
-                        tempExternalVent != null) {
-                      appState.setExternalVent(tempExternalVent!);
-                    }
-                    setState(() => editing = null);
-                  },
-                  child: const Text('OK'),
-                ),
-              ],
-            ),
           ],
         ),
       );

@@ -77,29 +77,29 @@ class _EnumRadioSelectorState<T> extends State<EnumRadioSelector<T>> {
         }),
 
         // Buttons row
-        // Padding(
-        //   padding: const EdgeInsets.symmetric(vertical: 2),
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        //     children: [
-        //       ElevatedButton(
-        //         onPressed: () {
-        //           widget.onResult(selected);
-        //         },
-        //         child: const Text('OK-'),
-        //       ),
-        //       ElevatedButton(
-        //         onPressed: () {
-        //           widget.onResult(widget.initialValue);
-        //         },
-        //         style: ElevatedButton.styleFrom(
-        //           backgroundColor: Colors.grey,
-        //         ),
-        //         child: const Text('Cancel'),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  widget.onResult(selected);
+                },
+                child: const Text('OK-'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  widget.onResult(widget.initialValue);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey,
+                ),
+                child: const Text('Cancel'),
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
