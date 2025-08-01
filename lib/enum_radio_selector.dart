@@ -86,7 +86,7 @@ class _EnumRadioSelectorState<T> extends State<EnumRadioSelector<T>> {
                 onPressed: () {
                   widget.onResult(selected);
                 },
-                child: const Text('OK-'),
+                child: const Text('OK'),
               ),
               ElevatedButton(
                 onPressed: () {

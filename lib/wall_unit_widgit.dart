@@ -20,12 +20,12 @@ class WallUnitWidgit extends StatefulWidget {
   State<WallUnitWidgit> createState() => _WallUnitWidgitState();
 }
 
-enum EditingField { fanSpeed, externalVent }
+enum EditingField { fanSpeed, externalVent, mode }
 
 class _WallUnitWidgitState extends State<WallUnitWidgit> {
   EditingField? editing;
-  FanSpeed? tempFanSpeed;
-  ExternalVent? tempExternalVent;
+  //  FanSpeed? tempFanSpeed;
+  //  ExternalVent? tempExternalVent;
   bool showFanSelector = false;
 
   @override
@@ -68,6 +68,20 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
                   });
                 },
               ),
+
+            if (editing == EditingField.mode)
+              EnumRadioSelector<Mode>(
+                title: 'Select Mode',
+                options: Mode.values,
+                initialValue: appState.mode,
+                displayStringForOption: (m) => m.name,
+                onResult: (selected) {
+                  setState(() {
+                    appState.setMode(selected);
+                    editing = null;
+                  });
+                },
+              ),
           ],
         ),
       );
@@ -83,8 +97,11 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
           const LogoAndCompany(),
           widget.spaceBox,
           ModeValueWidget(
-            appState: appState,
-            onTap: () => appState.toggleMode(),
+            text: appState.modalDisplay,
+            onTap:
+                () => setState(() {
+                  editing = EditingField.mode;
+                }),
           ),
           widget.spaceBox,
           Opacity(
@@ -95,7 +112,6 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
               onTap:
                   () => setState(() {
                     editing = EditingField.fanSpeed;
-                    tempFanSpeed = appState.fanSpeed;
                   }),
             ),
           ),
@@ -108,7 +124,6 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
               onTap:
                   () => setState(() {
                     editing = EditingField.externalVent;
-                    tempExternalVent = appState.externalVent;
                   }),
             ),
           ),

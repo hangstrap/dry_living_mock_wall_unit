@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'app_state.dart';
 
 class ModeValueWidget extends StatelessWidget {
-  const ModeValueWidget({super.key, required this.appState, required this.onTap});
+  const ModeValueWidget({super.key, required this.text, required this.onTap});
 
-  final AppState appState;
+  final String text;
   final VoidCallback onTap;
 
   @override
@@ -17,8 +16,8 @@ class ModeValueWidget extends StatelessWidget {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                appState.modalDisplay,
-                style: TextStyle(fontWeight: FontWeight.bold),
+                text,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -27,4 +26,3 @@ class ModeValueWidget extends StatelessWidget {
     );
   }
 }
-
