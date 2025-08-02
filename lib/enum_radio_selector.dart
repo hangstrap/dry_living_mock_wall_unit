@@ -92,9 +92,6 @@ class _EnumRadioSelectorState<T> extends State<EnumRadioSelector<T>> {
                 onPressed: () {
                   widget.onResult(widget.initialValue);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey,
-                ),
                 child: const Text('Cancel'),
               ),
             ],

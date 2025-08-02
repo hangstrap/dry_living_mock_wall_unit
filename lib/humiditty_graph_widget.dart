@@ -41,10 +41,10 @@ class HumidityGraphWidget extends StatelessWidget {
     return Column(
       children: [
         LabelValueWidget(
-            label: 'Humidity',
-            value: '$humidity%',
-            onTap: onEditRequested,
-          ),
+          label: 'Humidity',
+          value: '$humidity%',
+          onTap: onEditRequested,
+        ),
         const SizedBox(height: 4),
         SizedBox(
           width: double.infinity,
@@ -58,7 +58,7 @@ class HumidityGraphWidget extends StatelessWidget {
                 final scaleHelper = HumidityGraphScaleHelper(width);
                 final clickedHumidity = scaleHelper.fromX(localX);
                 onHumidityTap?.call(clickedHumidity);
-                 onEditRequested?.call(); 
+                onEditRequested.call();
               }
             },
             child: CustomPaint(
@@ -70,7 +70,6 @@ class HumidityGraphWidget extends StatelessWidget {
     );
   }
 }
-
 
 class _HumidityGraphPainter extends CustomPainter {
   final int humidity;
@@ -100,7 +99,6 @@ class _HumidityGraphPainter extends CustomPainter {
 
     // Base line
     canvas.drawLine(Offset(0, barY), Offset(size.width, barY), linePaint);
-
 
     // Recommended range: 55–65%
     final lowX = scaleHelper.toX(55);

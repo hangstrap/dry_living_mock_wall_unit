@@ -20,7 +20,7 @@ class LogoAndCompany extends StatelessWidget {
         Expanded(
           flex: 1,
           child: Text(
-            'Dehumidifier Ventilation System v1',
+            'Dehumidifier Ventilation System',
             style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),

@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 
 enum Mode { off, fanOnly, humidifier }
 
+enum PowerRelay { on, off}
+
 enum FanSpeed { low, auto, high }
 
-enum FanRelay { off, high, low }
+enum FanRelay { high, low }
 
 enum ExternalVent { open, closed }
 
-enum ExternalVenRelay { off, open, closed }
+enum ExternalVenRelay { open, closed }
 
 enum DeHumidifierRelay { off, on }
 
@@ -19,18 +21,21 @@ class AppState extends ChangeNotifier {
   int _humidity = 45;
   int _targetHumidity = 60;
 
-  FanRelay _fanRelay = FanRelay.off;
-  ExternalVenRelay _externalVentRelay = ExternalVenRelay.off;
+  PowerRelay _powerRelay = PowerRelay.off;
+  FanRelay _fanRelay = FanRelay.low;
+  ExternalVenRelay _externalVentRelay = ExternalVenRelay.closed;
   DeHumidifierRelay _deHumidifierRelay = DeHumidifierRelay.off;
 
   void _update() {
     switch (mode) {
       case Mode.off:
-        _fanRelay = FanRelay.off;
-        _externalVentRelay = ExternalVenRelay.off;
+        _powerRelay = PowerRelay.off;
+        _fanRelay = FanRelay.low;
+        _externalVentRelay = ExternalVenRelay.closed;
         _deHumidifierRelay = DeHumidifierRelay.off;
         break;
       case Mode.fanOnly:
+        _powerRelay = PowerRelay.on;
         _fanRelay = switch (_fanSpeed) {
           FanSpeed.low => FanRelay.low,
           FanSpeed.auto => FanRelay.low,
@@ -43,6 +48,7 @@ class AppState extends ChangeNotifier {
         _deHumidifierRelay = DeHumidifierRelay.off;
         break;
       case Mode.humidifier:
+        _powerRelay = PowerRelay.on;
         _externalVentRelay =
             _externalVent == ExternalVent.open
                 ? ExternalVenRelay.open
@@ -131,9 +137,11 @@ class AppState extends ChangeNotifier {
     _update();
   }
 
+  PowerRelay get powerRelay => _powerRelay;
   FanRelay get fanRelay => _fanRelay;
   ExternalVenRelay get externalVentRelay => _externalVentRelay;
   DeHumidifierRelay get deHumidifierRelay => _deHumidifierRelay;
+
 
   bool get displayFanSpeed => _mode == Mode.fanOnly || _mode == Mode.humidifier;
   bool get displayExternalVent => mode != Mode.off;
