@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
-enum Mode { off, fanOnly, humidifier }
+enum Mode { off, fanOnly, humidifierAndFan, humidifierOnly}
 
 enum PowerRelay { on, off}
 
@@ -15,7 +16,7 @@ enum ExternalVenRelay { open, closed }
 enum DeHumidifierRelay { off, on }
 
 class AppState extends ChangeNotifier {
-  Mode _mode = Mode.humidifier;
+  Mode _mode = Mode.off;
   FanSpeed _fanSpeed = FanSpeed.low;
   ExternalVent _externalVent = ExternalVent.closed;
   int _humidity = 45;
@@ -25,7 +26,25 @@ class AppState extends ChangeNotifier {
   FanRelay _fanRelay = FanRelay.low;
   ExternalVenRelay _externalVentRelay = ExternalVenRelay.closed;
   DeHumidifierRelay _deHumidifierRelay = DeHumidifierRelay.off;
+ 
+  DateTime _simulatedTime = DateTime.now();
 
+  DateTime get simulatedTime => _simulatedTime;
+
+  late final Timer _timer;
+
+  AppState() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _simulatedTime = _simulatedTime.add(const Duration(minutes: 1));
+      _update();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
   void _update() {
     switch (mode) {
       case Mode.off:
@@ -47,7 +66,7 @@ class AppState extends ChangeNotifier {
                 : ExternalVenRelay.closed;
         _deHumidifierRelay = DeHumidifierRelay.off;
         break;
-      case Mode.humidifier:
+      case Mode.humidifierAndFan:
         _powerRelay = PowerRelay.on;
         _externalVentRelay =
             _externalVent == ExternalVent.open
@@ -68,6 +87,21 @@ class AppState extends ChangeNotifier {
           };
           _deHumidifierRelay = DeHumidifierRelay.off;
         }
+        case Mode.humidifierOnly:
+        final minute = _simulatedTime.minute;
+        if( minute < 5){
+          _powerRelay = PowerRelay.on;
+          _deHumidifierRelay = DeHumidifierRelay.off;
+        }else{
+          if( _powerRelay == PowerRelay.on){
+            if( humidity> targetHumidity){
+              _deHumidifierRelay = DeHumidifierRelay.on;
+            }else{
+              _deHumidifierRelay = DeHumidifierRelay.off;
+              _powerRelay = PowerRelay.off;
+            } 
+          }
+        }
     }
     notifyListeners();
   }
@@ -82,8 +116,10 @@ class AppState extends ChangeNotifier {
       case Mode.off:
         _mode = Mode.fanOnly;
       case Mode.fanOnly:
-        _mode = Mode.humidifier;
-      case Mode.humidifier:
+        _mode = Mode.humidifierAndFan;
+      case Mode.humidifierAndFan:
+        _mode = Mode.humidifierOnly;
+      case Mode.humidifierOnly:
         _mode = Mode.off;
     }
     _update();    
@@ -143,9 +179,9 @@ class AppState extends ChangeNotifier {
   DeHumidifierRelay get deHumidifierRelay => _deHumidifierRelay;
 
 
-  bool get displayFanSpeed => _mode == Mode.fanOnly || _mode == Mode.humidifier;
+  bool get displayFanSpeed => _mode == Mode.fanOnly || _mode == Mode.humidifierAndFan || _mode == Mode.humidifierOnly;
   bool get displayExternalVent => mode != Mode.off;
-  bool get displayHumifity => _mode == Mode.humidifier;
+  bool get displayHumifity => _mode == Mode.humidifierAndFan || _mode == Mode.humidifierOnly;
 
   String get modalDisplay {
     switch (_mode) {
@@ -153,12 +189,20 @@ class AppState extends ChangeNotifier {
         return "Unit Off";
       case Mode.fanOnly:
         return "Fan Only";
-      case Mode.humidifier:
+      case Mode.humidifierAndFan:
         if( humidity > targetHumidity){
           return "Dehumidifier Running";
         }
         else{
           return "Dehumidifier Idle";
+        }
+      case Mode.humidifierOnly:
+        if(_simulatedTime.minute < 5){
+          return "Measuring Humidity";
+        }else if(humidity > targetHumidity){
+          return "Dehumidifier Running";
+        }else{
+          return "Idle";
         }
     }
   }

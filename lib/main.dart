@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'app_state.dart';
 import 'wall_unit_widgit.dart';
 import 'roof_unit_widet.dart';
+import 'clock_widget.dart';
 
 void main() {
   runApp(
@@ -31,6 +32,8 @@ class MainApp extends StatelessWidget {
               RoofUnitWidget(appState: roofUnitState),
               spaceBox,
               UserInputWidget(appState: roofUnitState),
+              spaceBox,
+              ClockWidget( time: roofUnitState.simulatedTime), 
             ],
           ),
         ),

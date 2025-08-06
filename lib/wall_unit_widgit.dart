@@ -90,7 +90,8 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
                     switch(m){
                       case Mode.off: return "Off";
                       case Mode.fanOnly: return "Fan Only";
-                      case Mode.humidifier: return "Dehumidifier";
+                      case Mode.humidifierAndFan: return "Dehumidifier and Fan";
+                      case Mode.humidifierOnly: return "Dehumidifier Only";
                     }
                   },
                 onResult: (selected) {
