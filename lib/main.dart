@@ -27,7 +27,7 @@ class MainApp extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              WallUnitWidgit(spaceBox: spaceBox, appState: roofUnitState),
+              WallUnitWidget(spaceBox: spaceBox, appState: roofUnitState),
               spaceBox,
               RoofUnitWidget(appState: roofUnitState),
               spaceBox,
