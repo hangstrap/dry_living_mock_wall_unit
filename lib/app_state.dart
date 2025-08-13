@@ -178,22 +178,22 @@ class AppState extends ChangeNotifier {
   String get modalDisplay {
     switch (_mode) {
       case Mode.off:
-        return "Unit Off";
+        return "Unit off";
       case Mode.fanOnly:
-        return "Fan Only";
+        return "Fan only";
       case Mode.humidifierAndFan:
         if (humidity > targetHumidity) {
-          return "Dehumidifier Running";
+          return "Dehumidifier running";
         } else {
-          return "Dehumidifier Idle";
+          return "Dehumidifier idle";
         }
       case Mode.humidifierOnly:
         if (_simulatedTime.minute < 5) {
-          return "Measuring Humidity";
+          return "Eco checking humidity";
         } else if (deHumidifierRelay == DeHumidifierRelay.on) {
-          return "Dehumidifier Running";
+          return "Eco running";
         } else {
-          return "Idle";
+          return "Eco idle";
         }
     }
   }
