@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'app_state.dart';
 import 'label_value_widget.dart';
 import 'mode_value_widget.dart';
-import 'humiditty_graph_widget.dart';
+import 'humidity_graph_widget.dart';
 import 'logo_and_company_widget.dart';
 import 'enum_radio_selector.dart';
 import 'humidity_edit_widget.dart';
 
-class WallUnitWidgit extends StatefulWidget {
-  const WallUnitWidgit({
+class WallUnitWidget extends StatefulWidget {
+  const WallUnitWidget({
     super.key,
     required this.spaceBox,
     required this.appState,
@@ -18,101 +18,97 @@ class WallUnitWidgit extends StatefulWidget {
   final AppState appState;
 
   @override
-  State<WallUnitWidgit> createState() => _WallUnitWidgitState();
+  State<WallUnitWidget> createState() => _WallUnitWidgetState();
 }
 
 enum EditingField { fanSpeed, externalVent, mode, targetHumidity }
 
-class _WallUnitWidgitState extends State<WallUnitWidgit> {
+class _WallUnitWidgetState extends State<WallUnitWidget> {
   EditingField? editing;
-  //  FanSpeed? tempFanSpeed;
-  //  ExternalVent? tempExternalVent;
-  bool showFanSelector = false;
 
   @override
   Widget build(BuildContext context) {
     final appState = widget.appState;
 
-    if (editing != null) {
-      return Container(
-        width: 240,
-        height: 360,
-        color: Colors.grey[200],
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const LogoAndCompany(),
-            widget.spaceBox,
-            if (editing == EditingField.fanSpeed)
-              EnumRadioSelector<FanSpeed>(
-                title: 'Select Fan Speed',
-                options: FanSpeed.values,
-                initialValue: appState.fanSpeed,
-                displayStringForOption: (fs){
-                  switch(fs){
-                    case FanSpeed.low: return "Low";
-                    case FanSpeed.auto: return "Auto";
-                    case FanSpeed.high: return "High";
-                  }
-                },
-                onResult: (selected) {
-                  setState(() {
-                    appState.setFanSpeed(selected);
-                    editing = null;
-                  });
-                },
-              ),
-            if (editing == EditingField.externalVent)
-              EnumRadioSelector<ExternalVent>(
-                title: 'Select External Vent',
-                options: ExternalVent.values,
-                initialValue: widget.appState.externalVent,
-                displayStringForOption: (ev) {
-                  switch( ev){
-                    case ExternalVent.open: return "Open";
-                    case ExternalVent.closed: return "Closed";
-                  }
-                },
-                onResult: (selected) {
-                  setState(() {
-                    widget.appState.setExternalVent(selected);
-                    editing = null;
-                  });
-                },
-              ),
+    return editing != null
+        ? _buildEditingView(appState)
+        : _buildDisplayView(appState);
+  }
 
-            if (editing == EditingField.mode)
-              EnumRadioSelector<Mode>(
-                title: 'Select Mode',
-                options: Mode.values,
-                initialValue: appState.mode,
-                displayStringForOption: (m){
-                    switch(m){
-                      case Mode.off: return "Off";
-                      case Mode.fanOnly: return "Fan Only";
-                      case Mode.humidifierAndFan: return "Dehumidifier and Fan";
-                      case Mode.humidifierOnly: return "Dehumidifier Only";
-                    }
-                  },
-                onResult: (selected) {
-                  setState(() {
-                    appState.setMode(selected);
-                    editing = null;
-                  });
-                },
-              ),
-            if (editing == EditingField.targetHumidity)
-              HumidityEditWidget(
-                initialTargetHumidity: appState.targetHumidity,
-                onCancel: () => setState(() => editing = null),
-                onChanged: (newHumidity) {
-                  appState.setTargetHumidity(newHumidity);
-                  setState(() => editing = null);
-                },
-              ),
-          ],
-        ),
-      );
+  Widget _buildEditingView(AppState appState) {
+    Widget? editor;
+
+    switch (editing) {
+      case EditingField.fanSpeed:
+        editor = EnumRadioSelector<FanSpeed>(
+          title: 'Select Fan Speed',
+          options: FanSpeed.values,
+          initialValue: appState.fanSpeed,
+          displayStringForOption: (fs) => switch (fs) {
+            FanSpeed.low => "Low",
+            FanSpeed.auto => "Auto",
+            FanSpeed.high => "High",
+          },
+          onResult: (selected) {
+            setState(() {
+              appState.setFanSpeed(selected);
+              editing = null;
+            });
+          },
+        );
+        break;
+
+      case EditingField.externalVent:
+        editor = EnumRadioSelector<ExternalVent>(
+          title: 'Select External Vent',
+          options: ExternalVent.values,
+          initialValue: appState.externalVent,
+          displayStringForOption: (ev) => switch (ev) {
+            ExternalVent.open => "Open",
+            ExternalVent.closed => "Closed",
+          },
+          onResult: (selected) {
+            setState(() {
+              appState.setExternalVent(selected);
+              editing = null;
+            });
+          },
+        );
+        break;
+
+      case EditingField.mode:
+        editor = EnumRadioSelector<Mode>(
+          title: 'Select Mode',
+          options: Mode.values,
+          initialValue: appState.mode,
+          displayStringForOption: (m) => switch (m) {
+            Mode.off => "Off",
+            Mode.fanOnly => "Fan Only",
+            Mode.humidifierAndFan => "Dehumidifier and Fan",
+            Mode.humidifierOnly => "Dehumidifier Only",
+          },
+          onResult: (selected) {
+            setState(() {
+              appState.setMode(selected);
+              editing = null;
+            });
+          },
+        );
+        break;
+
+      case EditingField.targetHumidity:
+        editor = HumidityEditWidget(
+          initialTargetHumidity: appState.targetHumidity,
+          onCancel: () => setState(() => editing = null),
+          onChanged: (newHumidity) {
+            appState.setTargetHumidity(newHumidity);
+            setState(() => editing = null);
+          },
+        );
+        break;
+
+      case null:
+        break;
     }
 
     return Container(
@@ -124,12 +120,25 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
         children: [
           const LogoAndCompany(),
           widget.spaceBox,
+          if (editor != null) editor,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDisplayView(AppState appState) {
+    return Container(
+      width: 240,
+      height: 360,
+      color: Colors.grey[200],
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          const LogoAndCompany(),
+          widget.spaceBox,
           ModeValueWidget(
             text: appState.modalDisplay,
-            onTap:
-                () => setState(() {
-                  editing = EditingField.mode;
-                }),
+            onTap: () => setState(() => editing = EditingField.mode),
           ),
           widget.spaceBox,
           Opacity(
@@ -137,10 +146,7 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
             child: LabelValueWidget(
               label: 'Fan Speed',
               value: appState.fanSpeed.name,
-              onTap:
-                  () => setState(() {
-                    editing = EditingField.fanSpeed;
-                  }),
+              onTap: () => setState(() => editing = EditingField.fanSpeed),
             ),
           ),
           widget.spaceBox,
@@ -149,28 +155,20 @@ class _WallUnitWidgitState extends State<WallUnitWidgit> {
             child: LabelValueWidget(
               label: 'External Vent',
               value: appState.externalVent.name,
-              onTap:
-                  () => setState(() {
-                    editing = EditingField.externalVent;
-                  }),
+              onTap: () => setState(() => editing = EditingField.externalVent),
             ),
           ),
           widget.spaceBox,
-
           Opacity(
             opacity: appState.displayHumifity ? 1.0 : 0.0,
             child: GestureDetector(
-              onTap:
-                  () => setState(() => editing = EditingField.targetHumidity),
+              onTap: () => setState(() => editing = EditingField.targetHumidity),
               child: HumidityGraphWidget(
                 humidity: appState.humidity,
                 targetHumidity: appState.targetHumidity,
-                onHumidityTap: (_) {}, // no-op when not editing
-                onEditRequested: () {
-                  setState(() {
-                    editing = EditingField.targetHumidity;
-                  });
-                },
+                onHumidityTap: (_) {},
+                onEditRequested: () =>
+                    setState(() => editing = EditingField.targetHumidity),
               ),
             ),
           ),
