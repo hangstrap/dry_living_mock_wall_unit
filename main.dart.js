@@ -31332,14 +31332,14 @@ break
 case 2:s=B.aW
 break
 default:s=p}q.r=s}break}q.ak()},
-gZy(){var s=this,r="Dehumidifier Running"
-switch(s.a.a){case 0:return"Unit Off"
-case 1:return"Fan Only"
-case 2:if(s.d>s.e)return r
-else return"Dehumidifier Idle"
-case 3:if(A.U_(s.y)<5)return"Measuring Humidity"
-else if(s.x===B.fa)return r
-else return"Idle"}}}
+gZy(){var s=this
+switch(s.a.a){case 0:return"Unit off"
+case 1:return"Fan only"
+case 2:if(s.d>s.e)return"Dehumidifier running"
+else return"Dehumidifier idle"
+case 3:if(A.U_(s.y)<5)return"Eco checking humidity"
+else if(s.x===B.fa)return"Eco running"
+else return"Eco idle"}}}
 A.Kj.prototype={
 $1(a){var s=this.a
 s.y=s.y.oC(6e7)
@@ -31575,7 +31575,7 @@ case 1:s="Fan Only"
 break
 case 2:s="Dehumidifier and Fan"
 break
-case 3:s="Dehumidifier Only"
+case 3:s="Eco: Dehumidifier Only"
 break
 default:s=null}return s},
 $S:217}
