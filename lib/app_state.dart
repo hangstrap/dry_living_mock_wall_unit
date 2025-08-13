@@ -134,19 +134,7 @@ class AppState extends ChangeNotifier {
     _update();
   }
 
-  void toggleMode() {
-    switch (_mode) {
-      case Mode.off:
-        _mode = Mode.fanOnly;
-      case Mode.fanOnly:
-        _mode = Mode.humidifierAndFan;
-      case Mode.humidifierAndFan:
-        _mode = Mode.humidifierOnly;
-      case Mode.humidifierOnly:
-        _mode = Mode.off;
-    }
-    _update();
-  }
+
 
   FanSpeed get fanSpeed => _fanSpeed;
   void setFanSpeed(FanSpeed speed) {
@@ -154,20 +142,6 @@ class AppState extends ChangeNotifier {
     _update();
   }
 
-  void toggleFanSpeed() {
-    switch (_fanSpeed) {
-      case FanSpeed.low:
-        _fanSpeed = FanSpeed.auto;
-        break;
-      case FanSpeed.auto:
-        _fanSpeed = FanSpeed.high;
-        break;
-      case FanSpeed.high:
-        _fanSpeed = FanSpeed.low;
-        break;
-    }
-    _update();
-  }
 
   ExternalVent get externalVent => _externalVent;
   void setExternalVent(ExternalVent vent) {
@@ -175,14 +149,6 @@ class AppState extends ChangeNotifier {
     _update();
   }
 
-  void toggleExternalVent() {
-    if (_externalVent == ExternalVent.open) {
-      _externalVent = ExternalVent.closed;
-    } else {
-      _externalVent = ExternalVent.open;
-    }
-    _update();
-  }
 
   int get humidity => _humidity;
   void setHumidity(int level) {

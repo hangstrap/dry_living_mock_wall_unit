@@ -85,7 +85,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
             Mode.off => "Off",
             Mode.fanOnly => "Fan Only",
             Mode.humidifierAndFan => "Dehumidifier and Fan",
-            Mode.humidifierOnly => "Dehumidifier Only",
+            Mode.humidifierOnly => "Eco: Dehumidifier Only",
           },
           onResult: (selected) {
             setState(() {
