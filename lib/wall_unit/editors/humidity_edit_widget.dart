@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'humidity_graph_widget.dart';
+import '../humidity_graph_widget.dart';
 
 class HumidityEditWidget extends StatefulWidget {
   final int initialTargetHumidity;

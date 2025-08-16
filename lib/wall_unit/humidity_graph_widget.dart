@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'label_value_widget.dart';
+import '../label_value_widget.dart';
 
 class HumidityGraphScaleHelper {
   final double width;
