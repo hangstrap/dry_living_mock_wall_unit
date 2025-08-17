@@ -1,2 +1,8 @@
-
-enum EditingField { menu, mode, fanSpeed, externalVent, targetHumidity }
+enum EditingField {
+  home,
+  editMenu,
+  mode,
+  fanSpeed,
+  externalVent,
+  targetHumidity,
+}

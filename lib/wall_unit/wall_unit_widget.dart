@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../app_state.dart';
+import 'wall_unit_field_edit_router.dart';
+import "editing_field_enum.dart";
+import 'wall_unit_settings_menu.dart';
 import 'views/logo_and_company_widget.dart';
 import 'views/mode_value_widget.dart';
 import 'views/humidity_graph_widget.dart';
-import 'wall_unit_field_edit_router.dart';
-import 'wall_unit_settings_menu.dart';
-import "editing_field_enum.dart";
-
-
 
 class WallUnitWidget extends StatefulWidget {
   final SizedBox spaceBox;
@@ -24,40 +22,34 @@ class WallUnitWidget extends StatefulWidget {
 }
 
 class _WallUnitWidgetState extends State<WallUnitWidget> {
-  EditingField? editing;
+  EditingField editing = EditingField.home;
+
+
+  void _handleClose() {
+    setState(() {
+      if (editing == EditingField.editMenu) {
+        editing = EditingField.home;
+      } else if (editing != EditingField.home) {
+        editing = EditingField.editMenu;
+      } else {
+        editing = EditingField.home;
+      }
+    });
+  }
+
+  // void _handleFieldSelected(EditingField field) {
+  //   setState(() {
+  //     editing = field;
+  //   });
+  // }
 
   @override
-  Widget build(BuildContext context) {
-    final appState = widget.appState;
-    final spaceBox = widget.spaceBox;
-    // Field editor view
-    if (editing != null && editing != EditingField.menu) {
-      return WallUnitFieldEditRouter(field: editing!, 
-      appState: appState,
-      onClose: ()=> setState(()=>editing=null));
-    }
+Widget build(BuildContext context) {
+  final appState = widget.appState;
+  final spaceBox = widget.spaceBox;
 
-    // Menu view
-    if (editing == EditingField.menu) {
-      return Container(
-        width: 240,
-        height: 360,
-        color: Colors.grey[200],
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            WallUnitSettingsMenu(
-              appState: appState,
-              spaceBox: spaceBox,
-              onFieldSelected: (field) => setState(() => editing = field),
-              onBack: ()=> setState(() => editing = null),
-            )
-          ],
-        ),
-      );
-    }
-
-    // Top display view
+  if (editing == EditingField.home) {
+    // Home UI
     return Container(
       width: 240,
       height: 360,
@@ -78,7 +70,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
               Opacity(
                 opacity: appState.displayHumifity ? 1.0 : 0.0,
                 child: GestureDetector(
-                  onTap: () {}, // Top view tap does nothing
+                  onTap: () {},
                   child: HumidityGraphWidget(
                     humidity: appState.humidity,
                     targetHumidity: appState.targetHumidity,
@@ -95,7 +87,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
             children: [
               IconButton(
                 icon: const Icon(Icons.settings),
-                onPressed: () => setState(() => editing = EditingField.menu),
+                onPressed: () => setState(() => editing = EditingField.editMenu),
               ),
               IconButton(
                 icon: const Icon(Icons.info_outline),
@@ -108,6 +100,22 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
         ],
       ),
     );
+  } else if (editing == EditingField.editMenu) {
+    // Settings menu
+    return WallUnitSettingsMenu(
+      appState: appState,
+      spaceBox: spaceBox,
+      onFieldSelected: (field) => setState(() => editing = field),
+      onBack: () => setState(() => editing = EditingField.home),
+    );
+  } else {
+    // Edit screens
+    return WallUnitFieldEditRouter(
+      field: editing,
+      appState: widget.appState,
+      spaceBox: widget.spaceBox,
+      onClose: _handleClose,
+    );
   }
-
+}
 }

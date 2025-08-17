@@ -34,7 +34,7 @@ class WallUnitSettingsMenu extends StatelessWidget {
           Expanded(
             child: ListView(
               children: EditingField.values
-                  .where((f) => f != EditingField.menu)
+                  .where((f) => f != EditingField.home && f != EditingField.editMenu)
                   .map((field) {
                 final label = _labelForField(field);
                 final value = _valueForField(field, appState) ?? '';
@@ -71,7 +71,8 @@ class WallUnitSettingsMenu extends StatelessWidget {
         return 'External Vent';
       case EditingField.targetHumidity:
         return 'Target Humidity';
-      case EditingField.menu:
+      case EditingField.home:
+      case EditingField.editMenu:
         return '';
     }
   }
@@ -86,7 +87,8 @@ class WallUnitSettingsMenu extends StatelessWidget {
         return appState.externalVent.name;
       case EditingField.targetHumidity:
         return '${appState.targetHumidity}%';
-      case EditingField.menu:
+      case EditingField.home:
+      case EditingField.editMenu:
         return null;
     }
   }
