@@ -5,26 +5,38 @@ import 'base_field_edit_view.dart';
 
 class ExternalVentEditView extends StatelessWidget {
   final AppState appState;
-  const ExternalVentEditView({required this.appState, super.key});
+  final VoidCallback onClose;
+
+  const ExternalVentEditView({
+    required this.appState,
+    required this.onClose,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return BaseFieldEditView<ExternalVent>(
       title: "External Vent",
       value: appState.externalVent,
-      onSave: (newValue) => appState.setExternalVent(newValue),
-      editorBuilder: (value, onChanged) => Column(
-        children: ExternalVent.values
-            .map(
-              (e) => RadioListTile<ExternalVent>(
-                title: Text(e.displayName),
-                value: e,
-                groupValue: value,
-                onChanged: onChanged,
-              ),
-            )
-            .toList(),
-      ),
+      onSave: (newValue) {
+        appState.setExternalVent(newValue); 
+        onClose();
+      },
+      onCancel: onClose,
+      editorBuilder:
+          (value, onChanged) => Column(
+            children:
+                ExternalVent.values
+                    .map(
+                      (e) => RadioListTile<ExternalVent>(
+                        title: Text(e.displayName),
+                        value: e,
+                        groupValue: value,
+                        onChanged: onChanged,
+                      ),
+                    )
+                    .toList(),
+          ),
     );
   }
 }

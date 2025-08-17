@@ -4,6 +4,7 @@ class BaseFieldEditView<T> extends StatefulWidget {
   final String title;
   final T value;
   final ValueChanged<T> onSave;
+  final VoidCallback onCancel; // now always required
   final Widget Function(T?, ValueChanged<T?>) editorBuilder;
 
   const BaseFieldEditView({
@@ -11,6 +12,7 @@ class BaseFieldEditView<T> extends StatefulWidget {
     required this.value,
     required this.onSave,
     required this.editorBuilder,
+    required this.onCancel, // no longer optional
     super.key,
   });
 
@@ -31,49 +33,51 @@ class _BaseFieldEditViewState<T> extends State<BaseFieldEditView<T>> {
   Widget build(BuildContext context) {
     final maxEditorHeight = MediaQuery.of(context).size.height * 0.7;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(widget.title)),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(12),
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxHeight: maxEditorHeight,
-                  ),
-                  child: widget.editorBuilder(
-                    currentValue,
-                    (newValue) {
-                      if (newValue != null) setState(() => currentValue = newValue);
-                    },
-                  ),
+    return Container(
+      width: 240,
+      height: 328,
+      color: Colors.grey[200],
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        children: [
+          Text(widget.title, style: Theme.of(context).textTheme.titleLarge),
+
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(12),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxHeight: maxEditorHeight),
+                child: widget.editorBuilder(
+                  currentValue,
+                  (newValue) {
+                    if (newValue != null) {
+                      setState(() => currentValue = newValue);
+                    }
+                  },
                 ),
               ),
             ),
-            const Divider(height: 1),
-            Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text("Cancel"),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      widget.onSave(currentValue);
-                      Navigator.pop(context);
-                    },
-                    child: const Text("OK"),
-                  ),
-                ],
-              ),
+          ),
+
+          const Divider(height: 1),
+
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: widget.onCancel, // always enabled
+                  child: const Text("Cancel"),
+                ),
+                ElevatedButton(
+                  onPressed: () => widget.onSave(currentValue),
+                  child: const Text("OK"),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

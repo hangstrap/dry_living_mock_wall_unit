@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../app_state.dart';
-import 'logo_and_company_widget.dart';
-import 'mode_value_widget.dart';
-import 'humidity_graph_widget.dart';
+import 'views/logo_and_company_widget.dart';
+import 'views/mode_value_widget.dart';
+import 'views/humidity_graph_widget.dart';
 import 'wall_unit_field_edit_router.dart';
 import 'wall_unit_settings_menu.dart';
 import "editing_field_enum.dart";
@@ -32,7 +32,9 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
     final spaceBox = widget.spaceBox;
     // Field editor view
     if (editing != null && editing != EditingField.menu) {
-      return WallUnitFieldEditRouter(field: editing!, appState: appState);
+      return WallUnitFieldEditRouter(field: editing!, 
+      appState: appState,
+      onClose: ()=> setState(()=>editing=null));
     }
 
     // Menu view
