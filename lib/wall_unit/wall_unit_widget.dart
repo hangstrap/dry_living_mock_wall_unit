@@ -23,19 +23,29 @@ class WallUnitWidget extends StatefulWidget {
 
 class _WallUnitWidgetState extends State<WallUnitWidget> {
   EditingField editing = EditingField.home;
-  EditingField previousEditingField = EditingField.home;
+  final List<EditingField> navStack = [];
+
+  void _goToSettingsMenu() {
+    setState(() {
+      navStack.add(editing);
+      editing = EditingField.editMenu;
+    });
+  }
 
   void _handleFieldSelected(EditingField field) {
     setState(() {
-      previousEditingField = editing;
+      navStack.add(editing);
       editing = field;
     });
   }
 
   void _handleClose() {
     setState(() {
-      editing = previousEditingField;
-      // Optionally reset previousEditingField if needed
+      if (navStack.isNotEmpty) {
+        editing = navStack.removeLast();
+      } else {
+        editing = EditingField.home;
+      }
     });
   }
 
@@ -60,7 +70,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
                 widget.spaceBox,
                 ModeValueWidget(
                   text: appState.modalDisplay,
-                  onTap: () => setState(() => editing = EditingField.mode),
+                  onTap: () => _handleFieldSelected(EditingField.mode),
                 ),
                 widget.spaceBox,
                 Opacity(
@@ -71,8 +81,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
                       humidity: appState.humidity,
                       targetHumidity: appState.targetHumidity,
                       onHumidityTap: (_) {},
-                      onEditRequested: () => setState(
-                          () => editing = EditingField.targetHumidity),
+                      onEditRequested: () => _handleFieldSelected(EditingField.targetHumidity),
                     ),
                   ),
                 ),
@@ -83,7 +92,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
               children: [
                 IconButton(
                   icon: const Icon(Icons.settings),
-                  onPressed: () => setState(() => editing = EditingField.editMenu),
+                  onPressed: _goToSettingsMenu,
                 ),
                 IconButton(
                   icon: const Icon(Icons.info_outline),
@@ -102,7 +111,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
         appState: appState,
         spaceBox: spaceBox,
         onFieldSelected: _handleFieldSelected,
-        onBack: () => setState(() => editing = EditingField.home),
+        onBack: _handleClose,
       );
     } else {
       // Edit screens
