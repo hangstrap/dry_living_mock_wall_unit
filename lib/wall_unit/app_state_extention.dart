@@ -8,9 +8,9 @@ extension ModeDisplay on Mode {
       case Mode.fanOnly:
         return "Fan Only";
       case Mode.humidifierAndFan:
-        return "Dehumidifier and Fan";
+        return "Dehumidifier & Fan";
       case Mode.humidifierOnly:
-        return "Dehumidifier Only";
+        return "Eco. Dehumidifier";
     }
   }
 }

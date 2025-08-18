@@ -26,11 +26,6 @@ class WallUnitFieldEditRouter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (field) {
-      // case EditingField.home:
-      //   return WallUnitWidget(
-      //     appState: appState,
-      //     spaceBox: spaceBox ?? const SizedBox(height: 12),
-      //   );
       case EditingField.editMenu:
         return WallUnitSettingsMenu(
           appState: appState,

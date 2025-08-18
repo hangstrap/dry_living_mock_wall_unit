@@ -1,3 +1,4 @@
+import 'package:dry_living_mock_wall_unit/wall_unit/app_state_extention.dart';
 import 'package:flutter/material.dart';
 import '../app_state.dart';
 import 'editing_field_enum.dart';
@@ -80,11 +81,11 @@ class WallUnitSettingsMenu extends StatelessWidget {
   String? _valueForField(EditingField field, AppState appState) {
     switch (field) {
       case EditingField.mode:
-        return appState.mode.name;
+        return appState.mode.displayName;
       case EditingField.fanSpeed:
-        return appState.fanSpeed.name;
+        return appState.fanSpeed.displayName;
       case EditingField.externalVent:
-        return appState.externalVent.name;
+        return appState.externalVent.displayName;
       case EditingField.targetHumidity:
         return '${appState.targetHumidity}%';
       case EditingField.home:

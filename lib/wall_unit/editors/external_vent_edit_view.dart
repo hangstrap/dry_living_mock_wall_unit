@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../app_state.dart';
 import '../app_state_extention.dart';
 import 'base_field_edit_view.dart';
+import 'enum_radio_selector.dart';
 
 class ExternalVentEditView extends StatelessWidget {
   final AppState appState;
@@ -23,28 +24,14 @@ class ExternalVentEditView extends StatelessWidget {
         onClose();
       },
       onCancel: onClose,
-      editorBuilder:
-          (value, onChanged) => Column(
-            children:
-                ExternalVent.values
-                    .map(
-                      (e) => RadioListTile<ExternalVent>(
-                        title: Text(e.displayName),
-                        value: e,
-                        groupValue: value,
-                        onChanged: onChanged,
-                        dense: true,
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: 0,
-                          horizontal: 8,
-                        ), // reduce vertical space
-                        visualDensity: VisualDensity(
-                          vertical: -4,
-                        ), // even more compact
-                      ),
-                    )
-                    .toList(),
-          ),
+      editorBuilder: (value, onChanged) {
+        return EnumRadioSelector<ExternalVent>(
+          options: ExternalVent.values,
+          initialValue: value ?? appState.externalVent,
+          displayStringForOption: (option) => option.displayName,
+          onResult: (selected) => onChanged(selected),
+        );
+      },
     );
   }
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class EnumRadioSelector<T> extends StatefulWidget {
-  final String title;
   final List<T> options;
   final T initialValue;
   final String Function(T) displayStringForOption;
@@ -9,7 +8,6 @@ class EnumRadioSelector<T> extends StatefulWidget {
 
   const EnumRadioSelector({
     super.key,
-    required this.title,
     required this.options,
     required this.initialValue,
     required this.displayStringForOption,
@@ -34,20 +32,6 @@ class _EnumRadioSelectorState<T> extends State<EnumRadioSelector<T>> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        // Title row with centered, bold text
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Center(
-            child: Text(
-              widget.title,
-              //style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-        ),
-
-
-
         // Compact radio options
         ...widget.options.map((option) {
           final label = widget.displayStringForOption(option);
@@ -64,39 +48,21 @@ class _EnumRadioSelectorState<T> extends State<EnumRadioSelector<T>> {
                   onChanged: (val) {
                     if (val != null) {
                       setState(() => selected = val);
+                      widget.onResult(val);
                     }
                   },
                 ),
                 GestureDetector(
-                  onTap: () => setState(() => selected = option),
+                  onTap: () {
+                    setState(() => selected = option);
+                    widget.onResult(option);
+                  },
                   child: Text(label),
                 ),
               ],
             ),
           );
         }),
-
-        // Buttons row
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  widget.onResult(selected);
-                },
-                child: const Text('OK'),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  widget.onResult(widget.initialValue);
-                },
-                child: const Text('Cancel'),
-              ),
-            ],
-          ),
-        ),
       ],
     );
   }
