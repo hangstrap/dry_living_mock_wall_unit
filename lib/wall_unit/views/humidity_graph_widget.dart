@@ -147,7 +147,7 @@ class _HumidityGraphPainter extends CustomPainter {
     final textPainter = TextPainter(
       text: TextSpan(
         text: text,
-        style: TextStyle(color: Colors.grey[800], fontSize: 10),
+        style: TextStyle(color: Colors.grey[800]),
       ),
       textDirection: TextDirection.ltr,
     );

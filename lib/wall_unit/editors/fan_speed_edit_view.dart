@@ -18,11 +18,11 @@ class FanSpeedEditView extends StatelessWidget {
     return BaseFieldEditView<FanSpeed>(
       title: "Fan Speed",
       value: appState.fanSpeed,
-      onSave: (newValue){
+      onSave: (newValue) {
         appState.setFanSpeed(newValue);
         onClose();
-      },  
-      onCancel: onClose,  
+      },
+      onCancel: onClose,
       editorBuilder:
           (value, onChanged) => Column(
             children:
@@ -33,6 +33,14 @@ class FanSpeedEditView extends StatelessWidget {
                         value: e,
                         groupValue: value,
                         onChanged: onChanged,
+                        dense: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 8,
+                        ), // reduce vertical space
+                        visualDensity: VisualDensity(
+                          vertical: -4,
+                        ), // even more compact
                       ),
                     )
                     .toList(),

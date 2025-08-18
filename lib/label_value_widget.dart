@@ -16,28 +16,17 @@ class LabelValueWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
-      child: 
-      Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  crossAxisAlignment: CrossAxisAlignment.center,
-  children: [
-    Text(label, style: TextStyle(fontSize: 14)),
-    Text(_capitalize(value), style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
-  ],
-)
-      // Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //   children: [
-      //     Text(
-      //       label,
-      //       style: const TextStyle(fontWeight: FontWeight.normal, fontSize: 14),
-      //     ),
-      //     Text(
-      //       _capitalize(value),
-      //       style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-      //     ),
-      //   ],
-      // ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(label),
+          Text(
+            _capitalize(value),
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
     );
   }
 

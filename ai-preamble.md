@@ -6,3 +6,4 @@ The font is to FreeSans 9pt, with bold and italic
 
 No popups or dialog boxes.
 
+Keep answers focused and short. It is ok to admin you dont understand / dont know

@@ -21,7 +21,6 @@ class LogoAndCompany extends StatelessWidget {
           flex: 1,
           child: Text(
             'Dehumidifier Ventilation System',
-            style: TextStyle(fontSize: 16),
             textAlign: TextAlign.center,
           ),
         ),

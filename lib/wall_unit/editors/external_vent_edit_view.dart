@@ -19,7 +19,7 @@ class ExternalVentEditView extends StatelessWidget {
       title: "External Vent",
       value: appState.externalVent,
       onSave: (newValue) {
-        appState.setExternalVent(newValue); 
+        appState.setExternalVent(newValue);
         onClose();
       },
       onCancel: onClose,
@@ -33,6 +33,14 @@ class ExternalVentEditView extends StatelessWidget {
                         value: e,
                         groupValue: value,
                         onChanged: onChanged,
+                        dense: true,
+                        contentPadding: EdgeInsets.symmetric(
+                          vertical: 0,
+                          horizontal: 8,
+                        ), // reduce vertical space
+                        visualDensity: VisualDensity(
+                          vertical: -4,
+                        ), // even more compact
                       ),
                     )
                     .toList(),

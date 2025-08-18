@@ -19,11 +19,27 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
   static SizedBox spaceBox = SizedBox(height: 10);
+  static const  double fontSize = 16;
 
   @override
   Widget build(BuildContext context) {
     var roofUnitState = context.watch<AppState>();
+    
+
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'FreeSans',
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(fontSize: fontSize, fontFamily: 'FreeSans'),
+          bodySmall: TextStyle(fontSize: fontSize, fontFamily: 'FreeSans'),
+          titleLarge: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'FreeSans',
+          ),
+        ),
+      ),
       home: Scaffold(
         body: Center(
           child: Column(

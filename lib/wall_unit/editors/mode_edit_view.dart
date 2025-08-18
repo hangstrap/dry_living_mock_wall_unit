@@ -27,6 +27,9 @@ class ModeEditView extends StatelessWidget {
               value: m,
               groupValue: value,
               onChanged: onChanged,
+              dense: true,
+              contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 8), // reduce vertical space
+              visualDensity: VisualDensity(vertical: -4), // even more compact
             );
           }).toList(),
         );
