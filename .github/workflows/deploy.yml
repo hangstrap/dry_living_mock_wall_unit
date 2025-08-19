@@ -1,9 +1,9 @@
-name: Deploy Flutter Web to GitHub Pages
+name: Deploy Flutter Web to GitHub Pages (per branch)
 
 on:
   push:
-    branches: [main]  # Change to your default branch if different
- 
+    branches: [ '**' ]  # Build on all branches
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -21,11 +21,14 @@ jobs:
         run: flutter pub get
 
       - name: Build Flutter web
-        run: flutter build web --base-href="/dry_living_mock_wall_unit/"
+        run: |
+          flutter build web --base-href="/dry_living_mock_wall_unit/${GITHUB_REF##*/}/"
+          mkdir -p out/${GITHUB_REF##*/}
+          cp -r build/web/* out/${GITHUB_REF##*/}/
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/web
+          publish_dir: out
           publish_branch: gh-pages

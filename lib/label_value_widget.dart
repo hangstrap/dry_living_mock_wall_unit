@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class LabelValueWidget extends StatelessWidget {
   const LabelValueWidget({
     super.key,
@@ -18,26 +17,21 @@ class LabelValueWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Expanded(
-            child: Align(alignment: Alignment.centerRight, child: Text(label)),
-          ),
-          SizedBox(width: 20), // optional spacing
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Text(
-                captalise(value),
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-            ),
+          Text(label),
+          Text(
+            _capitalize(value),
+            style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ],
       ),
     );
   }
 
-  String captalise(String str) {
+  String _capitalize(String str) {
+    if (str.isEmpty) return str;
     return str[0].toUpperCase() + str.substring(1);
   }
 }

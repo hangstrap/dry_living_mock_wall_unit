@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'app_state.dart';
-import 'wall_unit_widgit.dart';
-import 'roof_unit_widet.dart';
+import 'wall_unit/wall_unit_widget.dart';
+import 'roof_unit_widget.dart';
 import 'clock_widget.dart';
+import 'package:flutter/rendering.dart';
 
 void main() {
+  debugPaintSizeEnabled = false;
   runApp(
     MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => AppState())],
@@ -17,11 +19,27 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
   static SizedBox spaceBox = SizedBox(height: 10);
+  static const  double fontSize = 16;
 
   @override
   Widget build(BuildContext context) {
     var roofUnitState = context.watch<AppState>();
+    
+
     return MaterialApp(
+      theme: ThemeData(
+        fontFamily: 'FreeSans',
+        textTheme: const TextTheme(
+          bodyMedium: TextStyle(fontSize: fontSize, fontFamily: 'FreeSans'),
+          bodySmall: TextStyle(fontSize: fontSize, fontFamily: 'FreeSans'),
+          titleLarge: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.bold,
+            fontStyle: FontStyle.italic,
+            fontFamily: 'FreeSans',
+          ),
+        ),
+      ),
       home: Scaffold(
         body: Center(
           child: Column(
