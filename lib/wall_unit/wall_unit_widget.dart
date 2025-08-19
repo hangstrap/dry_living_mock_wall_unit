@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../app_state.dart';
 import 'wall_unit_field_edit_router.dart';
 import "editing_field_enum.dart";
-import 'wall_unit_settings_menu.dart';
+import 'wall_unit_edit_menu.dart';
 import 'views/logo_and_company_widget.dart';
 import 'views/mode_value_widget.dart';
 import 'views/humidity_graph_widget.dart';
@@ -29,6 +29,12 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
     setState(() {
       navStack.add(editing);
       editing = EditingField.editMenu;
+    });
+  }
+  void _goToInfoMenu() {
+    setState(() {
+      navStack.add(editing);
+      editing = EditingField.infoMenu;
     });
   }
 
@@ -96,9 +102,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.info_outline),
-                  onPressed: () {
-                    // Info action
-                  },
+                  onPressed: _goToInfoMenu,
                 ),
               ],
             ),
@@ -107,7 +111,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
       );
     } else if (editing == EditingField.editMenu) {
       // Settings menu
-      return WallUnitSettingsMenu(
+      return WallUnitEditMenu(
         appState: appState,
         spaceBox: spaceBox,
         onFieldSelected: _handleFieldSelected,
@@ -120,7 +124,8 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
         appState: widget.appState,
         spaceBox: widget.spaceBox,
         onClose: _handleClose,
-      );
+        onFieldSelected: _handleFieldSelected,
+      );      
     }
   }
 }

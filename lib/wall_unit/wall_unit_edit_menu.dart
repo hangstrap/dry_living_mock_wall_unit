@@ -4,13 +4,13 @@ import '../app_state.dart';
 import 'editing_field_enum.dart';
 import '../label_value_widget.dart';
 
-class WallUnitSettingsMenu extends StatelessWidget {
+class WallUnitEditMenu extends StatelessWidget {
   final AppState appState;
   final VoidCallback onBack;
   final ValueChanged<EditingField> onFieldSelected;
   final SizedBox spaceBox;
 
-  const WallUnitSettingsMenu({
+  const WallUnitEditMenu({
     super.key,
     required this.appState,
     required this.onBack,
@@ -74,6 +74,8 @@ class WallUnitSettingsMenu extends StatelessWidget {
         return 'Target Humidity';
       case EditingField.home:
       case EditingField.editMenu:
+      case EditingField.infoMenu:
+      case EditingField.version:
         return '';
     }
   }
@@ -90,6 +92,8 @@ class WallUnitSettingsMenu extends StatelessWidget {
         return '${appState.targetHumidity}%';
       case EditingField.home:
       case EditingField.editMenu:
+      case EditingField.infoMenu:
+      case EditingField.version:
         return null;
     }
   }

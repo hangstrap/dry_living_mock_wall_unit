@@ -19,12 +19,11 @@ void main() {
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
   static SizedBox spaceBox = SizedBox(height: 10);
-  static const  double fontSize = 16;
+  static const double fontSize = 16;
 
   @override
   Widget build(BuildContext context) {
     var roofUnitState = context.watch<AppState>();
-    
 
     return MaterialApp(
       theme: ThemeData(
@@ -51,7 +50,7 @@ class MainApp extends StatelessWidget {
               spaceBox,
               UserInputWidget(appState: roofUnitState),
               spaceBox,
-              ClockWidget( time: roofUnitState.simulatedTime), 
+              ClockWidget(time: roofUnitState.simulatedTime),
             ],
           ),
         ),
@@ -59,8 +58,6 @@ class MainApp extends StatelessWidget {
     );
   }
 }
-
-
 
 class UserInputWidget extends StatelessWidget {
   const UserInputWidget({super.key, required this.appState});
@@ -73,14 +70,14 @@ class UserInputWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: 16), 
+          const SizedBox(height: 16),
           Text("House humidity is : ${appState.humidity}"),
           Slider(
             value: appState.humidity.toDouble(),
             min: 0,
             max: 100,
             divisions: 100,
-    
+
             label: appState.humidity.toString(),
             onChanged: (value) => appState.setHumidity(value.toInt()),
           ),

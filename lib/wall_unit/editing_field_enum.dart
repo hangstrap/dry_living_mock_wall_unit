@@ -5,4 +5,6 @@ enum EditingField {
   fanSpeed,
   externalVent,
   targetHumidity,
+  infoMenu,
+  version
 }

@@ -2,7 +2,7 @@ This proram is a disply / mock of an Arduino device. Hence there are a number of
 
 The screen size is fixed to  width = 240 and height of 360
 
-The font is to FreeSans 9pt, with bold and italic 
+The font is to FreeSans 16pt, with bold and italic 
 
 No popups or dialog boxes.
 
