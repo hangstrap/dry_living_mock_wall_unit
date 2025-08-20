@@ -35,7 +35,7 @@ class WallUnitEditMenu extends StatelessWidget {
           Expanded(
             child: ListView(
               children: DisplayEnum.values
-                  .where((f) => f != DisplayEnum.home && f != DisplayEnum.editMenu)
+                  .where((f) => f.isEditable)
                   .map((field) {
                 final label = _labelForField(field);
                 final value = _valueForField(field, appState) ?? '';

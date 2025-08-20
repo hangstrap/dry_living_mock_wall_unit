@@ -14,16 +14,25 @@ class LabelValueWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
+    return ElevatedButton(    
+      onPressed: onTap,
+      style: TextButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 0),
+      ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text(label),
-          Text(
-            _capitalize(value),
-            style: TextStyle(fontWeight: FontWeight.bold),
+          Padding(
+            padding: const EdgeInsets.only(left: 8), // Move label in
+            child: Text(label),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 8), // Optional: move value in
+            child: Text(
+              _capitalize(value),
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
           ),
         ],
       ),

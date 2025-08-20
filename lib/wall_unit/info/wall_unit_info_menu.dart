@@ -40,6 +40,7 @@ class WallUnitInfoMenu extends StatelessWidget {
                   label: 'Version',
                   onPressed: () => onFieldSelected(DisplayEnum.version),
                 ),
+                spaceBox, 
                 MyButton(
                   label: 'Contact',
                   onPressed: () => onFieldSelected(DisplayEnum.contact),
