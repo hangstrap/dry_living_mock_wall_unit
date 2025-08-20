@@ -1,4 +1,4 @@
-enum EditingField {
+enum DisplayEnum {
   home,
   editMenu,
   mode,

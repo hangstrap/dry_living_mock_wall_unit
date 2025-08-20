@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../app_state.dart';
-import 'wall_unit_field_edit_router.dart';
-import "editing_field_enum.dart";
-import 'wall_unit_edit_menu.dart';
+import 'wall_unit_display_router.dart';
+import "display_enum.dart";
+import 'editors/wall_unit_edit_menu.dart';
 import 'views/logo_and_company_widget.dart';
 import 'views/mode_value_widget.dart';
 import 'views/humidity_graph_widget.dart';
@@ -22,23 +22,23 @@ class WallUnitWidget extends StatefulWidget {
 }
 
 class _WallUnitWidgetState extends State<WallUnitWidget> {
-  EditingField editing = EditingField.home;
-  final List<EditingField> navStack = [];
+  DisplayEnum editing = DisplayEnum.home;
+  final List<DisplayEnum> navStack = [];
 
   void _goToSettingsMenu() {
     setState(() {
       navStack.add(editing);
-      editing = EditingField.editMenu;
+      editing = DisplayEnum.editMenu;
     });
   }
   void _goToInfoMenu() {
     setState(() {
       navStack.add(editing);
-      editing = EditingField.infoMenu;
+      editing = DisplayEnum.infoMenu;
     });
   }
 
-  void _handleFieldSelected(EditingField field) {
+  void _handleFieldSelected(DisplayEnum field) {
     setState(() {
       navStack.add(editing);
       editing = field;
@@ -50,7 +50,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
       if (navStack.isNotEmpty) {
         editing = navStack.removeLast();
       } else {
-        editing = EditingField.home;
+        editing = DisplayEnum.home;
       }
     });
   }
@@ -60,7 +60,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
     final appState = widget.appState;
     final spaceBox = widget.spaceBox;
 
-    if (editing == EditingField.home) {
+    if (editing == DisplayEnum.home) {
       // Home UI
       return Container(
         width: 240,
@@ -76,7 +76,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
                 widget.spaceBox,
                 ModeValueWidget(
                   text: appState.modalDisplay,
-                  onTap: () => _handleFieldSelected(EditingField.mode),
+                  onTap: () => _handleFieldSelected(DisplayEnum.mode),
                 ),
                 widget.spaceBox,
                 Opacity(
@@ -87,7 +87,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
                       humidity: appState.humidity,
                       targetHumidity: appState.targetHumidity,
                       onHumidityTap: (_) {},
-                      onEditRequested: () => _handleFieldSelected(EditingField.targetHumidity),
+                      onEditRequested: () => _handleFieldSelected(DisplayEnum.targetHumidity),
                     ),
                   ),
                 ),
@@ -109,7 +109,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
           ],
         ),
       );
-    } else if (editing == EditingField.editMenu) {
+    } else if (editing == DisplayEnum.editMenu) {
       // Settings menu
       return WallUnitEditMenu(
         appState: appState,
@@ -119,7 +119,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
       );
     } else {
       // Edit screens
-      return WallUnitFieldEditRouter(
+      return WallUnitDisplayRouter(
         field: editing,
         appState: widget.appState,
         spaceBox: widget.spaceBox,

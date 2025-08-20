@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'editing_field_enum.dart';
+import '../display_enum.dart';
 
 class WallUnitInfoMenu extends StatelessWidget {
   final VoidCallback onBack;
   final SizedBox spaceBox;
-  final ValueChanged<EditingField> onFieldSelected;
+  final ValueChanged<DisplayEnum> onFieldSelected;
 
   // You can add more info labels here as needed
   static const List<String> infoLabels = [
@@ -40,7 +40,7 @@ class WallUnitInfoMenu extends StatelessWidget {
               children: [
                 // "Version" as bold, clickable text
                 GestureDetector(
-                  onTap: () => onFieldSelected(EditingField.version),
+                  onTap: () => onFieldSelected(DisplayEnum.version),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: Text(

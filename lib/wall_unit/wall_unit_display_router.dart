@@ -4,19 +4,19 @@ import 'editors/mode_edit_view.dart';
 import 'editors/external_vent_edit_view.dart';
 import 'editors/target_humidity_edit_view.dart';
 import 'editors/fan_speed_edit_view.dart';
-import 'editing_field_enum.dart';
-import 'wall_unit_edit_menu.dart';
-import 'wall_unit_info_menu.dart';
+import 'display_enum.dart';
+import 'editors/wall_unit_edit_menu.dart';
+import 'info/wall_unit_info_menu.dart';
 import 'info/version_view_widget.dart';
 
-class WallUnitFieldEditRouter extends StatelessWidget {
-  final EditingField field;
+class WallUnitDisplayRouter extends StatelessWidget {
+  final DisplayEnum field;
   final AppState appState;
   final VoidCallback onClose;
   final SizedBox? spaceBox;
-  final ValueChanged<EditingField>? onFieldSelected; // Add this
+  final ValueChanged<DisplayEnum>? onFieldSelected; // Add this
 
-  const WallUnitFieldEditRouter({
+  const WallUnitDisplayRouter({
     required this.field,
     required this.appState,
     required this.onClose,
@@ -28,28 +28,28 @@ class WallUnitFieldEditRouter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (field) {
-      case EditingField.editMenu:
+      case DisplayEnum.editMenu:
         return WallUnitEditMenu(
           appState: appState,
           spaceBox: spaceBox ?? const SizedBox(height: 12),
           onFieldSelected: onFieldSelected ?? (_) {},
           onBack: onClose,
         );
-      case EditingField.infoMenu:
+      case DisplayEnum.infoMenu:
         return WallUnitInfoMenu(
           onBack: onClose,
           spaceBox: spaceBox ?? const SizedBox(height: 12),
           onFieldSelected: onFieldSelected ?? (_) {},
         );
-      case EditingField.version:
+      case DisplayEnum.version:
         return VersionViewWidget(onClose: onClose);
-      case EditingField.mode:
+      case DisplayEnum.mode:
         return ModeEditView(appState: appState, onClose: onClose);
-      case EditingField.fanSpeed:
+      case DisplayEnum.fanSpeed:
         return FanSpeedEditView(appState: appState, onClose: onClose);
-      case EditingField.externalVent:
+      case DisplayEnum.externalVent:
         return ExternalVentEditView(appState: appState, onClose: onClose);
-      case EditingField.targetHumidity:
+      case DisplayEnum.targetHumidity:
         return TargetHumidityEditView(appState: appState, onClose: onClose);
       default:
         throw UnimplementedError('Field $field is not implemented');

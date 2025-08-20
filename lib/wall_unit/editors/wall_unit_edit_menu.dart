@@ -1,13 +1,13 @@
 import 'package:dry_living_mock_wall_unit/wall_unit/app_state_extention.dart';
 import 'package:flutter/material.dart';
-import '../app_state.dart';
-import 'editing_field_enum.dart';
-import '../label_value_widget.dart';
+import '../../app_state.dart';
+import '../display_enum.dart';
+import '../../label_value_widget.dart';
 
 class WallUnitEditMenu extends StatelessWidget {
   final AppState appState;
   final VoidCallback onBack;
-  final ValueChanged<EditingField> onFieldSelected;
+  final ValueChanged<DisplayEnum> onFieldSelected;
   final SizedBox spaceBox;
 
   const WallUnitEditMenu({
@@ -34,8 +34,8 @@ class WallUnitEditMenu extends StatelessWidget {
           spaceBox,
           Expanded(
             child: ListView(
-              children: EditingField.values
-                  .where((f) => f != EditingField.home && f != EditingField.editMenu)
+              children: DisplayEnum.values
+                  .where((f) => f != DisplayEnum.home && f != DisplayEnum.editMenu)
                   .map((field) {
                 final label = _labelForField(field);
                 final value = _valueForField(field, appState) ?? '';
@@ -62,38 +62,38 @@ class WallUnitEditMenu extends StatelessWidget {
     );
   }
 
-  String _labelForField(EditingField field) {
+  String _labelForField(DisplayEnum field) {
     switch (field) {
-      case EditingField.mode:
+      case DisplayEnum.mode:
         return 'Mode';
-      case EditingField.fanSpeed:
+      case DisplayEnum.fanSpeed:
         return 'Fan Speed';
-      case EditingField.externalVent:
+      case DisplayEnum.externalVent:
         return 'External Vent';
-      case EditingField.targetHumidity:
+      case DisplayEnum.targetHumidity:
         return 'Target Humidity';
-      case EditingField.home:
-      case EditingField.editMenu:
-      case EditingField.infoMenu:
-      case EditingField.version:
+      case DisplayEnum.home:
+      case DisplayEnum.editMenu:
+      case DisplayEnum.infoMenu:
+      case DisplayEnum.version:
         return '';
     }
   }
 
-  String? _valueForField(EditingField field, AppState appState) {
+  String? _valueForField(DisplayEnum field, AppState appState) {
     switch (field) {
-      case EditingField.mode:
+      case DisplayEnum.mode:
         return appState.mode.displayName;
-      case EditingField.fanSpeed:
+      case DisplayEnum.fanSpeed:
         return appState.fanSpeed.displayName;
-      case EditingField.externalVent:
+      case DisplayEnum.externalVent:
         return appState.externalVent.displayName;
-      case EditingField.targetHumidity:
+      case DisplayEnum.targetHumidity:
         return '${appState.targetHumidity}%';
-      case EditingField.home:
-      case EditingField.editMenu:
-      case EditingField.infoMenu:
-      case EditingField.version:
+      case DisplayEnum.home:
+      case DisplayEnum.editMenu:
+      case DisplayEnum.infoMenu:
+      case DisplayEnum.version:
         return null;
     }
   }
