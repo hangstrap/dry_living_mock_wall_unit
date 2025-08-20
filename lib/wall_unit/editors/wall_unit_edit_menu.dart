@@ -76,6 +76,7 @@ class WallUnitEditMenu extends StatelessWidget {
       case DisplayEnum.editMenu:
       case DisplayEnum.infoMenu:
       case DisplayEnum.version:
+      case DisplayEnum.contact:
         return '';
     }
   }
@@ -94,6 +95,7 @@ class WallUnitEditMenu extends StatelessWidget {
       case DisplayEnum.editMenu:
       case DisplayEnum.infoMenu:
       case DisplayEnum.version:
+      case DisplayEnum.contact:
         return null;
     }
   }

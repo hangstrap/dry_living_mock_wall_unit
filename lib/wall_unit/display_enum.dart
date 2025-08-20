@@ -6,5 +6,6 @@ enum DisplayEnum {
   externalVent,
   targetHumidity,
   infoMenu,
-  version
+  version,
+  contact
 }

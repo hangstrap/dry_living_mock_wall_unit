@@ -8,6 +8,7 @@ import 'display_enum.dart';
 import 'editors/wall_unit_edit_menu.dart';
 import 'info/wall_unit_info_menu.dart';
 import 'info/version_view_widget.dart';
+import 'info/contact_view_widget.dart';
 
 class WallUnitDisplayRouter extends StatelessWidget {
   final DisplayEnum field;
@@ -43,6 +44,8 @@ class WallUnitDisplayRouter extends StatelessWidget {
         );
       case DisplayEnum.version:
         return VersionViewWidget(onClose: onClose);
+      case DisplayEnum.contact:
+        return ContactViewWidget(onClose: onClose);
       case DisplayEnum.mode:
         return ModeEditView(appState: appState, onClose: onClose);
       case DisplayEnum.fanSpeed:
