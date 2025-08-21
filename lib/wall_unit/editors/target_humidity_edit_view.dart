@@ -25,8 +25,6 @@ class _TargetHumidityEditViewState extends State<TargetHumidityEditView> {
     targetHumidity = widget.appState.targetHumidity;
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return BaseFieldEditView<int>(
@@ -46,31 +44,41 @@ class _TargetHumidityEditViewState extends State<TargetHumidityEditView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                IconButton(icon: const Icon(Icons.chevron_left), onPressed: () {
-                  final newVal = (displayValue - 1)
-                      .clamp(HumidityGraphScaleHelper.minHumidity, HumidityGraphScaleHelper.maxHumidity);
-                  onChanged(newVal);
-                }),
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    final newVal = (displayValue - 1).clamp(
+                      HumidityGraphScaleHelper.minHumidity,
+                      HumidityGraphScaleHelper.maxHumidity,
+                    );
+                    onChanged(newVal);
+                  },
+                ),
                 const SizedBox(width: 8),
-                Text('$displayValue%', style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  '$displayValue%',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(width: 8),
-                IconButton(icon: const Icon(Icons.chevron_right), onPressed: () {
-                  final newVal = (displayValue + 1)
-                      .clamp(HumidityGraphScaleHelper.minHumidity, HumidityGraphScaleHelper.maxHumidity);
-                  onChanged(newVal);
-                }),
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    final newVal = (displayValue + 1).clamp(
+                      HumidityGraphScaleHelper.minHumidity,
+                      HumidityGraphScaleHelper.maxHumidity,
+                    );
+                    onChanged(newVal);
+                  },
+                ),
               ],
             ),
             const SizedBox(height: 12),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: HumidityGraphWidget(
-                humidity: displayValue,
-                targetHumidity: displayValue,
-                onHumidityTap: (v) => onChanged(v),
-                onEditRequested: () {},
-                dislayLable: false,
-              ),
+            HumidityGraphWidget(
+              humidity: displayValue,
+              targetHumidity: displayValue,
+              onHumidityTap: (v) => onChanged(v),
+              onEditRequested: () {},
+              dislayLable: false,
             ),
             const SizedBox(height: 12),
           ],

@@ -12,12 +12,21 @@ class ContactViewWidget extends StatelessWidget {
     return BaseFieldInfoView(
       title: 'Contact',
       onBack: onClose,
-      child: Center(
-        child: QrImageView(
-          data: 'https://www.dryliving.co.nz/contact-us',
-          version: QrVersions.auto,
-          size: 160,
-        ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Scan to send an email',
+          ),
+          const SizedBox(height: 16),
+          Center(
+            child: QrImageView(
+              data: 'https://www.dryliving.co.nz/contact-us',
+              version: QrVersions.auto,
+              size: 160,
+            ),
+          ),
+        ],
       ),
     );
   }

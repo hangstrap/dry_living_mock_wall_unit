@@ -2,18 +2,18 @@ import 'package:flutter/material.dart';
 
 class HumidityGraphScaleHelper {
   final double width;
-  static const int minHumidity = 20;
+  static const int minHumidity = 40;
   static const int maxHumidity = 80;
 
   HumidityGraphScaleHelper(this.width);
 
-  /// Converts humidity (20–80) to an x-coordinate
+  /// Converts humidity (40–80) to an x-coordinate
   double toX(int humidity) {
     final clamped = humidity.clamp(minHumidity, maxHumidity);
     return ((clamped - minHumidity) / (maxHumidity - minHumidity)) * width;
   }
 
-  /// Converts an x-coordinate to a humidity value (20–80)
+  /// Converts an x-coordinate to a humidity value (40–80)
   int fromX(double x) {
     final ratio = (x / width).clamp(0.0, 1.0);
     final humidity = minHumidity + ratio * (maxHumidity - minHumidity);
@@ -113,8 +113,12 @@ class _HumidityGraphPainter extends CustomPainter {
     final targetPaint = Paint()..color = Colors.blue;
     final recommendedPaint = Paint()..color = Colors.lightGreen;
 
-    // Base line
-    canvas.drawLine(Offset(0, barY), Offset(size.width, barY), linePaint);
+    // Only draw the base line from 40% to 80%
+    final minLine = 40;
+    final maxLine = 80;
+    final minX = scaleHelper.toX(minLine);
+    final maxX = scaleHelper.toX(maxLine);
+    canvas.drawLine(Offset(minX, barY), Offset(maxX, barY), linePaint);
 
     // Recommended range: 55–65%
     final lowX = scaleHelper.toX(55);
@@ -124,39 +128,39 @@ class _HumidityGraphPainter extends CustomPainter {
       recommendedPaint,
     );
 
-    // Ticks every 10%
-    for (int i = 20; i <= 80; i += 10) {
+    // Ticks every 10% from 40 to 80
+    for (int i = 40; i <= 80; i += 10) {
       final x = scaleHelper.toX(i);
       canvas.drawLine(Offset(x, barY - 5), Offset(x, barY + 5), tickPaint);
     }
 
-    // Long ticks at 20, 50, 80
-    for (int i in [20, 50, 80]) {
+    // Long ticks at 40, 60, 80
+    for (int i in [40, 60, 80]) {
       final x = scaleHelper.toX(i);
       canvas.drawLine(Offset(x, barY - 10), Offset(x, barY + 10), tickPaint);
     }
 
-    // Humidity bars
+    // Humidity bars (clip to 40-80%)
     final top = barY - 2;
     const thickness = 4.0;
-    final hX = scaleHelper.toX(humidity);
-    final tX = scaleHelper.toX(targetHumidity);
+    final hX = scaleHelper.toX(humidity.clamp(40, 80));
+    final tX = scaleHelper.toX(targetHumidity.clamp(40, 80));
 
     if (humidity < targetHumidity) {
-      canvas.drawRect(Rect.fromLTWH(0, top, hX, thickness), underPaint);
+      canvas.drawRect(Rect.fromLTWH(minX, top, hX - minX, thickness), underPaint);
     } else {
-      canvas.drawRect(Rect.fromLTWH(0, top, tX, thickness), underPaint);
+      canvas.drawRect(Rect.fromLTWH(minX, top, tX - minX, thickness), underPaint);
       canvas.drawRect(Rect.fromLTWH(tX, top, hX - tX, thickness), overPaint);
     }
 
-    // Target circle
+    // Target circle (clip to 40-80%)
     canvas.drawCircle(Offset(tX, barY), 4, targetPaint);
 
-    // Labels
+    // Labels at 40, 60, 80
     final textY = barY + 10;
-    _drawLabel(canvas, '20%', Offset(scaleHelper.toX(20), textY));
-    _drawLabel(canvas, '50%', Offset(scaleHelper.toX(50) - 8, textY));
-    _drawLabel(canvas, '80%', Offset(scaleHelper.toX(100) - 18, textY));
+    _drawLabel(canvas, '40%', Offset(scaleHelper.toX(40), textY));
+    _drawLabel(canvas, '60%', Offset(scaleHelper.toX(60) - 8, textY));
+    _drawLabel(canvas, '80%', Offset(scaleHelper.toX(80) - 18, textY));
   }
 
   void _drawLabel(Canvas canvas, String text, Offset offset) {
