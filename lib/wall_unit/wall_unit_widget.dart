@@ -87,7 +87,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
                       humidity: appState.humidity,
                       targetHumidity: appState.targetHumidity,
                       onHumidityTap: (_) {},
-                      onEditRequested: () => _handleFieldSelected(DisplayEnum.targetHumidity),
+                      onEditRequested: () {},
                     ),
                   ),
                 ),

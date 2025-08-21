@@ -69,6 +69,7 @@ class _TargetHumidityEditViewState extends State<TargetHumidityEditView> {
                 targetHumidity: displayValue,
                 onHumidityTap: (v) => onChanged(v),
                 onEditRequested: () {},
+                dislayLable: false,
               ),
             ),
             const SizedBox(height: 12),

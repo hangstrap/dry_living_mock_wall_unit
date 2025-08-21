@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../label_value_widget.dart';
 
 class HumidityGraphScaleHelper {
   final double width;
@@ -27,6 +26,7 @@ class HumidityGraphWidget extends StatelessWidget {
   final int targetHumidity;
   final void Function(int)? onHumidityTap;
   final VoidCallback onEditRequested;
+  final bool dislayLable;
 
   const HumidityGraphWidget({
     super.key,
@@ -34,16 +34,32 @@ class HumidityGraphWidget extends StatelessWidget {
     required this.targetHumidity,
     this.onHumidityTap,
     required this.onEditRequested,
+    this.dislayLable = true, 
   });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        LabelValueWidget(
-          label: 'Humidity',
-          value: '$humidity%',
-          onTap: onEditRequested,
+        if(dislayLable)
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 8), // Move label in
+              child: Text("Humidity"),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                right: 8,
+              ), // Optional: move value in
+              child: Text(
+                '$humidity%',
+                style: const TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 4),
         SizedBox(
@@ -145,10 +161,7 @@ class _HumidityGraphPainter extends CustomPainter {
 
   void _drawLabel(Canvas canvas, String text, Offset offset) {
     final textPainter = TextPainter(
-      text: TextSpan(
-        text: text,
-        style: TextStyle(color: Colors.grey[800]),
-      ),
+      text: TextSpan(text: text, style: TextStyle(color: Colors.grey[800])),
       textDirection: TextDirection.ltr,
     );
     textPainter.layout();
