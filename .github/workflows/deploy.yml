@@ -3,7 +3,8 @@ name: Deploy Flutter Web to GitHub Pages (per branch)
 on:
   push:
     branches: [ '**' ]  # Build on all branches
-
+  workflow_dispatch:
+  
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
