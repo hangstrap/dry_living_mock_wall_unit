@@ -76,7 +76,7 @@ class _WallUnitWidgetState extends State<WallUnitWidget> {
                 widget.spaceBox,
                 ModeValueWidget(
                   text: appState.modalDisplay,
-                  onTap: () => _handleFieldSelected(DisplayEnum.mode),
+                  onTap: () {},
                 ),
                 widget.spaceBox,
                 Opacity(
