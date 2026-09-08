@@ -162,6 +162,11 @@ class AppState extends ChangeNotifier {
     _update();
   }
 
+  void setSimulatedTime(DateTime time) {
+    _simulatedTime = time;
+    _update();
+  }
+
   PowerRelay get powerRelay => _powerRelay;
   FanRelay get fanRelay => _fanRelay;
   ExternalVenRelay get externalVentRelay => _externalVentRelay;

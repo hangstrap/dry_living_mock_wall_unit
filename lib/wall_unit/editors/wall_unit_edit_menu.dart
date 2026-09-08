@@ -72,6 +72,8 @@ class WallUnitEditMenu extends StatelessWidget {
         return 'External Vent';
       case DisplayEnum.targetHumidity:
         return 'Target Humidity';
+      case DisplayEnum.clock:
+        return 'Clock';
       case DisplayEnum.home:
       case DisplayEnum.editMenu:
       case DisplayEnum.infoMenu:
@@ -91,6 +93,10 @@ class WallUnitEditMenu extends StatelessWidget {
         return appState.externalVent.displayName;
       case DisplayEnum.targetHumidity:
         return '${appState.targetHumidity}%';
+      case DisplayEnum.clock:
+        final h = appState.simulatedTime.hour.toString().padLeft(2, '0');
+        final m = appState.simulatedTime.minute.toString().padLeft(2, '0');
+        return '$h:$m';
       case DisplayEnum.home:
       case DisplayEnum.editMenu:
       case DisplayEnum.infoMenu:

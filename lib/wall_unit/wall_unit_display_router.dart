@@ -4,6 +4,7 @@ import 'editors/mode_edit_view.dart';
 import 'editors/external_vent_edit_view.dart';
 import 'editors/target_humidity_edit_view.dart';
 import 'editors/fan_speed_edit_view.dart';
+import 'editors/clock_edit_view.dart';
 import 'display_enum.dart';
 import 'editors/wall_unit_edit_menu.dart';
 import 'info/wall_unit_info_menu.dart';
@@ -54,6 +55,8 @@ class WallUnitDisplayRouter extends StatelessWidget {
         return ExternalVentEditView(appState: appState, onClose: onClose);
       case DisplayEnum.targetHumidity:
         return TargetHumidityEditView(appState: appState, onClose: onClose);
+      case DisplayEnum.clock:
+        return ClockEditView(appState: appState, onClose: onClose);
       default:
         throw UnimplementedError('Field $field is not implemented');
     }

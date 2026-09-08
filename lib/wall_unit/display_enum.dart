@@ -5,6 +5,7 @@ enum DisplayEnum {
   fanSpeed,
   externalVent,
   targetHumidity,
+  clock,
   infoMenu,
   version,
   contact
@@ -16,6 +17,7 @@ extension DisplayEnumUsage on DisplayEnum {
       case DisplayEnum.fanSpeed:
       case DisplayEnum.externalVent:
       case DisplayEnum.targetHumidity:
+      case DisplayEnum.clock:
         return true;
       default:
         return false;
